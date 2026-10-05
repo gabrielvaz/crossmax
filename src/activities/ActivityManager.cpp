@@ -28,6 +28,7 @@
 #include "apps/weread/WeReadActivity.h"
 #endif
 #include "apps/gomoku/GomokuMenuActivity.h"
+#include "apps/library-scan/LibraryScanActivity.h"
 #include "apps/minesweeper/MinesweeperMenuActivity.h"
 #include "apps/pixel-switch/PixelSwitchActivity.h"
 #include "apps/reading-stats/ReadingStatsActivity.h"
@@ -618,6 +619,8 @@ void ActivityManager::goToPixelSwitch() { replaceActivityWith<PixelSwitchActivit
 void ActivityManager::goToCalculator() { replaceActivityWith<CalculatorActivity>(); }
 
 void ActivityManager::goToWoodfish() { replaceActivityWith<WoodfishActivity>(); }
+
+void ActivityManager::goToLibraryScan() { replaceActivityWith<LibraryScanActivity>(); }
 
 void ActivityManager::goToGame2048() { replaceActivityWith<Game2048Activity>(); }
 
