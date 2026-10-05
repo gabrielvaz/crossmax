@@ -698,16 +698,24 @@ void HomeActivity::render(RenderLock&&) {
   const bool isCarousel =
       static_cast<CrossPointSettings::UI_THEME>(SETTINGS.uiTheme) == CrossPointSettings::UI_THEME::LYRA_CAROUSEL;
 
-  const int homeMenuItemCount = hasOpdsServers ? kHomeMenuItemCount : kHomeMenuItemCount - 1;
+  // Must match what activateSelection() resolves the tapped row to: the third
+  // slot is shared by the OPDS browser and the plugin catalog, so it exists
+  // whenever either does. Counting it with hasOpdsServers alone while the
+  // action counts it with hasLibrarySlot() shifts every row below it by one
+  // (plugins installed, no OPDS server: Apps opened Settings).
+  const int homeMenuItemCount = hasLibrarySlot() ? kHomeMenuItemCount : kHomeMenuItemCount - 1;
   const bool showContinueReading = metrics.homeContinueReadingInMenu && !recentBooks.empty();
   std::vector<const char*> menuItems;
   std::vector<UIIcon> menuIcons;
   menuItems.reserve(homeMenuItemCount + (showContinueReading ? 1 : 0));
   menuIcons.reserve(homeMenuItemCount + (showContinueReading ? 1 : 0));
   for (int i = 0; i < homeMenuItemCount; ++i) {
-    const HomeMenuEntry* entry = menuEntryAtIndex(i, hasOpdsServers, isCarousel);
-    menuItems.push_back(I18N.get(entry->label));
-    menuIcons.push_back(entry->item == HomeMenuItem::OPDS_BROWSER && hasPlugins ? Plugins : entry->icon);
+    const HomeMenuEntry* entry = menuEntryAtIndex(i, hasLibrarySlot(), isCarousel);
+    // The shared slot takes the plugin name as well as the plugin icon;
+    // labelling it "OPDS browser" while it opens the catalog reads as a bug.
+    const bool pluginSlot = entry->item == HomeMenuItem::OPDS_BROWSER && hasPlugins;
+    menuItems.push_back(I18N.get(pluginSlot ? StrId::STR_PLUGINS : entry->label));
+    menuIcons.push_back(pluginSlot ? Plugins : entry->icon);
   }
 
   if (showContinueReading) {
