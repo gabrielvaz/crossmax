@@ -30,7 +30,7 @@ HttpDownloader::DownloadError runGetSecure(const std::string& url, const std::st
                                            size_t* bytesOut = nullptr, const bool downgradeRedirectsToHttp = false) {
   char userAgent[80];
   const int length =
-      snprintf(userAgent, sizeof(userAgent), "CrossMux-%s-" CROSSPOINT_VERSION, HalSystem::getDeviceModel());
+      snprintf(userAgent, sizeof(userAgent), "CrossMax-%s-" CROSSPOINT_VERSION, HalSystem::getDeviceModel());
   if (length < 0 || static_cast<size_t>(length) >= sizeof(userAgent)) return HttpDownloader::HTTP_ERROR;
   WifiPowerSaveGuard psGuard;
   freeink::FetchOptions options;

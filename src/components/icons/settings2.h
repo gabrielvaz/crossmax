@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
 #include "uiChromeIcons.h"
 inline constexpr const uint8_t* Settings2Icon = icon_settings_2_32_bits;
 #else

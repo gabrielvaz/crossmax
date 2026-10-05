@@ -38,7 +38,7 @@ class UserGuideTest : public ::testing::Test {
     const auto& book = RECENT_BOOKS.persisted.front();
     EXPECT_EQ(book.path, asset.path);
     EXPECT_EQ(book.title, asset.title);
-    EXPECT_EQ(book.author, "CrossMux");
+    EXPECT_EQ(book.author, "CrossMax");
     EXPECT_FALSE(book.coverBmpPath.empty());
     EXPECT_TRUE(Storage.exists(MARKER));
   }

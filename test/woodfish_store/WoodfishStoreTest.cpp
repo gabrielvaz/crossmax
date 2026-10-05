@@ -37,7 +37,7 @@ class WoodfishStoreTest : public ::testing::Test {
  protected:
   void SetUp() override {
     static std::atomic<unsigned> serial{0};
-    root_ = std::filesystem::temp_directory_path() / ("crossmux-woodfish-store-" + std::to_string(serial.fetch_add(1)));
+    root_ = std::filesystem::temp_directory_path() / ("crossmax-woodfish-store-" + std::to_string(serial.fetch_add(1)));
     std::error_code error;
     std::filesystem::remove_all(root_, error);
     ASSERT_TRUE(std::filesystem::create_directories(root_, error));

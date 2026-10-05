@@ -52,7 +52,7 @@ class SdCardFontMemoryTest : public ::testing::Test {
  protected:
   SdCardFont font;
   std::string path =
-      (std::filesystem::temp_directory_path() / ("crossmux-font-memory-" + std::to_string(getpid()) + ".cpfont"))
+      (std::filesystem::temp_directory_path() / ("crossmax-font-memory-" + std::to_string(getpid()) + ".cpfont"))
           .string();
   void SetUp() override {
     ESP = {};

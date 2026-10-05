@@ -89,7 +89,7 @@ void readPicoHostShutdown() {
 // The accelerometer INT1 (GPIO1, wake-high) is deliberately NOT armed. The
 // SC7A20H only asserts INT1 after AOI1/HPIS1 pickup-wake configuration, and
 // nothing programs those registers: the SDK IMU exposes begin/read/sleep/wake
-// only (Imu.h), CrossMux has no pickup-to-wake feature, and CTRL3 (INT1_CFG)
+// only (Imu.h), CrossMax has no pickup-to-wake feature, and CTRL3 (INT1_CFG)
 // stays 0, so INT1 can never assert. Arming a level trigger on a line nothing
 // drives would be dead configuration pretending to be a wake source; the
 // primitive takes the high mask whenever a pickup-wake feature lands.

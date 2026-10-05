@@ -13,7 +13,7 @@
 #include "components/icons/customListIcons.h"
 #include "components/icons/inx_apps.h"
 #include "components/icons/listIcons.h"
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
 #include "components/icons/listIcons48.h"
 #include "components/icons/uiChromeIcons.h"
 #endif
@@ -90,7 +90,7 @@ inline freeink::ui::GfxRendererTarget makeUiTarget(const GfxRenderer& renderer, 
 // the legacy drawIcon assets use a different bit layout). Two crisp sizes:
 // 24 for single-line rows, 32 for label+subtitle rows.
 inline freeink::ui::BitmapRef listIconFor(const UIIcon icon, const int size = 24) {
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
   if (size >= 48 || UiHighDpiProfile::enabled) {
     switch (icon) {
       case UIIcon::Settings:

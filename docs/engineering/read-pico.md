@@ -15,7 +15,7 @@ path described below.
 SDK PR [#35](https://github.com/0x1abin/freeink-sdk/pull/35) is merged. This native
 grayscale extension depends on SDK PR [#36](https://github.com/0x1abin/freeink-sdk/pull/36)
 and pins its commit `fe12c72f9ca7dc72929c3203e204e700986f8d97`. Merge SDK #36 before
-the paired CrossMux PR; a recursive checkout includes the required Read Pico drivers:
+the paired CrossMax PR; a recursive checkout includes the required Read Pico drivers:
 
 ```bash
 git submodule update --init --recursive
@@ -52,7 +52,7 @@ A normal checkout needs no local dependency override.
 Build/run with `pio run -e simulator_readpico -t run_simulator`. Keep test SD data
 isolated with `CROSSPOINT_SIM_SD=/absolute/path/to/test-sd`; use the existing
 `CROSSPOINT_SIM_INPUT_SCRIPT` and `CROSSPOINT_SIM_SCREENSHOTS` schedules. The fork's
-`tests/run_readpico_self_test.sh <crossmux-root>` compiles the production host HAL
+`tests/run_readpico_self_test.sh <crossmax-root>` compiles the production host HAL
 and checks large image offsets, gray transactions, native screenshots, scaled
 touch and power-only wake/relaunch in all four orientations. On Linux without a
 desktop, run it through `xvfb-run`.
@@ -262,7 +262,7 @@ is undiagnosed. Physical acceptance remains pending: verify long Chinese chapter
 and book titles, footer/percentage/estimate readability, battery clearance,
 all five home layouts, edge taps and page turns in all four orientations.
 
-The isolated PR candidate starts from the latest CrossMux and SDK main branches;
+The isolated PR candidate starts from the latest CrossMax and SDK main branches;
 it includes only the font and layout changes above. Its exact revisions, build
 hashes and check results are recorded separately under `.pio/readpico-pr-review/`
 and in the paired PR descriptions. It is not flashed again by this PR task;
@@ -270,11 +270,11 @@ historical startup logs do not establish final-candidate physical acceptance.
 
 ### Validation record
 
-SDK rebased onto `ab8c859389725bc91a0d44c2de32c24c64fc893b`; CrossMux onto
+SDK rebased onto `ab8c859389725bc91a0d44c2de32c24c64fc893b`; CrossMax onto
 `64282343da004f434edf1f4ccb0a6170888e523f`. Both original histories are saved
 locally as `codex/backup-readpico-before-rebase` in their respective repositories.
 SDK's final rebase tree equals the original port plus main's eight changed paths.
-CrossMux range-diff preserves every nonempty source commit; SDK-only pointer
+CrossMax range-diff preserves every nonempty source commit; SDK-only pointer
 bumps become empty because the official dependency stays at main. The only
 additional rebase-stage commit fixes the font test harness's resolver interface.
 Both original PR branches were updated with leases naming their saved old SHAs.
@@ -342,7 +342,7 @@ recently read screen keeps its accepted geometry. The user reported obstruction
 after this reader adjustment. That firmware was frozen for merging with
 reader-footer obstruction recorded as an outstanding issue.
 
-The frozen firmware code at CrossMux `f63170ac` with SDK `4af3673` passed the
+The frozen firmware code at CrossMax `f63170ac` with SDK `4af3673` passed the
 full pre-integration `./bin/ci-check`: formatting, static analysis, the seven
 existing hardware builds and all 598 host tests. SDK resource/transaction checks
 and the FreeInkUI host suite also passed. The normal Read Pico image was built
@@ -380,7 +380,7 @@ queues or memory reserves.
 
 ### Initial device check
 
-At the user's request, CrossMux `c4b6cee2` with SDK `4af3673` was uploaded through
+At the user's request, CrossMax `c4b6cee2` with SDK `4af3673` was uploaded through
 USB Serial/JTAG to the connected ESP32-S3 revision 0.2 (16 MB Flash, 8 MB PSRAM).
 `pio run -e readpico -t upload --upload-port <verified-readpico-port>` passed,
 including the uploader's written-data digest verification. This is the normal
@@ -404,7 +404,7 @@ three sleep/wake cycles remain pending. Local evidence is kept under
 `.pio/readpico-flash-round2/` (ignored, not a repository dependency).
 
 After the user reported excessive space beneath the reader footer, the 4 px
-status-text adjustment was uploaded as CrossMux `f63170ac` with the same SDK.
+status-text adjustment was uploaded as CrossMax `f63170ac` with the same SDK.
 Written-data digest verification passed again; the image SHA-256 is
 `f133b643d7b5c65edb8b887d6e9ebeb55066f48539a6260aec9012f4f759e3ee`.
 Its recorded normal boot shows the same successful peripheral initialization and
@@ -417,7 +417,7 @@ planned as part of the frozen-version merge.
 
 ### CI dependency follow-up
 
-SDK #35 includes a standalone Read Pico host-check workflow. CrossMux runs
+SDK #35 includes a standalone Read Pico host-check workflow. CrossMax runs
 `python3 freeink-sdk/libs/display/EpdiyLcd/test/host/test_transactions.py` in its
 existing host-test CI step and local `bin/ci-check`. Local hardware checks build
 `readpico`; Hardware CI builds and verifies the `readpico_nightly` package. The
@@ -447,7 +447,7 @@ may be renamed without editing this file first.
 
 | Item | Value |
 |---|---|
-| CrossMux worktree revision | `80c67543c3be1689e77e4b85c78abd9e5a4fff7b` (`80c67543`), clean at time of writing |
+| CrossMax worktree revision | `80c67543c3be1689e77e4b85c78abd9e5a4fff7b` (`80c67543`), clean at time of writing |
 | Pinned SDK gitlink | `094976e1d47ad7120cf461fec5f6b737eaabf13f` (`freeink-sdk`, `heads/main`) |
 | Reference firmware | [`MindReset/read_pico_firmware`](https://github.com/MindReset/read_pico_firmware) `main`, Apache-2.0, ESP-IDF v6.1 |
 | Official docs | [`MindReset/dot_web_docs`](https://github.com/MindReset/dot_web_docs) `zh-Hans-CN/read_0/{index,start,firmware}.mdx` → <https://dot.mindreset.tech/docs/read_0> |
@@ -957,7 +957,7 @@ trade-off:
   against ghosting".
 - Cost: GC16 48 versus 36 phases and GL16 48 versus 37 phases. Per the header's
   own formula that is more refresh wall time and more drive per refresh, and more
-  LUT steps (see §2.6). Whether the extra phases buy anything on CrossMux's
+  LUT steps (see §2.6). Whether the extra phases buy anything on CrossMax's
   content is exactly what a hardware A/B must decide.
 - The trimmed `E0470_WAVEFORM` path (and the 8-gray table) stay available as
   later options once the LUT conversion is proven; adopting the trim now would
@@ -1403,7 +1403,7 @@ Frozen decisions:
 The repo's [`partitions.csv`](../../partitions.csv) and the board's factory
 `partitions_16M.csv` are **incompatible**:
 
-| | CrossMux `partitions.csv` | Board factory `partitions_16M.csv` |
+| | CrossMax `partitions.csv` | Board factory `partitions_16M.csv` |
 |---|---|---|
 | `nvs` | 0x9000, 0x5000 (20 KB) | 0x9000, 0x5000 (20 KB) |
 | `phy_init` | — | 0xE000, 0x1000 (4 KB) |
@@ -1414,7 +1414,7 @@ The repo's [`partitions.csv`](../../partitions.csv) and the board's factory
 Consequences:
 
 - The two tables overlap at **0xE000** (`otadata` versus `phy_init`) and the
-  factory app slot is 2 MB against CrossMux's 6.25 MB. A CrossMux `readpico`
+  factory app slot is 2 MB against CrossMax's 6.25 MB. A CrossMax `readpico`
   image cannot be placed into the factory layout.
 - **First installation therefore requires a full layout install**, not an
   app-only write: bootloader at `0x0`, `partitions.bin` at `0x8000`,
@@ -1426,7 +1426,7 @@ Consequences:
   verify a recoverable backup** (a full 16 MiB read), and keep it outside the
   device. Flashing is authorized only inside the task that performs it.
 - The 6.25 MB OTA slot is the headroom to watch: the readpico image adds M5GFX on
-  top of the shared CrossMux feature set. **No size was measured in this round.**
+  top of the shared CrossMax feature set. **No size was measured in this round.**
 
 ### 3.9 Out of scope (explicitly)
 
@@ -1436,7 +1436,7 @@ Consequences:
   enrollment is a separate task that begins by inspecting
   `scripts/nightly_targets.py` and its consumers.
 - No simulator target (`simulator_readpico`) is added.
-- No CrossMux source, HAL, README or other engineering doc is modified by the
+- No CrossMax source, HAL, README or other engineering doc is modified by the
   interface-freeze task; registering this document in
   [`docs/engineering/index.md`](index.md) and updating the two README language
   versions (a `port-device-bsp` handoff requirement, `SKILL.md:183-187`) are
@@ -1454,15 +1454,15 @@ measurement was taken, and none is asserted anywhere in this document.
 | # | Check | Target & revision | Status | Evidence / reason |
 |---|---|---|---|---|
 | 1 | Upstream hardware evidence collected and read | `read_pico_firmware` `main`; `dot_web_docs` `zh-Hans-CN/read_0/*` | **passed** | Every §1 row cites its file; see also the source list in §5.1 |
-| 2 | Repository/SDK interface inventory | CrossMux `80c67543`; SDK `094976e1` | **passed** | `BoardConfig.h`, `LgfxEpdConfig.h`, `LgfxEpdDriver.{h,cpp}`, `FreeInkDisplay.{h,cpp}`, `InputManager.{h,cpp}`, `Imu.cpp`, `Rtc.cpp`, `BatteryMonitor.cpp`, `SdmmcBlockDevice.{h,cpp}`, `platformio.ini`, `partitions.csv` read and cited |
+| 2 | Repository/SDK interface inventory | CrossMax `80c67543`; SDK `094976e1` | **passed** | `BoardConfig.h`, `LgfxEpdConfig.h`, `LgfxEpdDriver.{h,cpp}`, `FreeInkDisplay.{h,cpp}`, `InputManager.{h,cpp}`, `Imu.cpp`, `Rtc.cpp`, `BatteryMonitor.cpp`, `SdmmcBlockDevice.{h,cpp}`, `platformio.ini`, `partitions.csv` read and cited |
 | 3 | LovyanGFX pin/LUT/allocation semantics read | pinned `m5stack/M5GFX @ 0.2.20` (`Bus_EPD.{h,cpp}`, `Panel_EPD.{hpp,cpp}`) | **passed** (pinned `0.2.20` tree) | `Bus_EPD.h` `config_t`; `Panel_EPD.cpp:228`, `:232`, `:235`, `:238-240`, `:276-283`; `LUT_MAKE` macro. Verified against the **0.2.20** git tag (lines identical to `master`). B3's source-verification half is closed; the on-hardware A/B half remains |
 | 4 | Frozen interface is internally consistent | This document, §3 | **passed** | Names cross-checked against the SDK enums/structs they extend |
 | 5 | `[env:readpico]` resolves | `[env:readpico]` | **passed** | `pio project config` and `--lint` both exit 0; `-e` is not a valid option in PIO 6.1.19 (exit 2) — use `--json-output` |
-| 6 | `pio run -e readpico` compiles | CrossMux `80c67543` + SDK `094976e1` + the port diff | **passed** | 2026-09-25: `SUCCESS`, `firmware.bin` 6,046,672 B, RAM 23.3%, Flash 92.3% (6,046,171 / 6,553,600). Four blockers were found and fixed first (see the handoff note §8) |
+| 6 | `pio run -e readpico` compiles | CrossMax `80c67543` + SDK `094976e1` + the port diff | **passed** | 2026-09-25: `SUCCESS`, `firmware.bin` 6,046,672 B, RAM 23.3%, Flash 92.3% (6,046,171 / 6,553,600). Four blockers were found and fixed first (see the handoff note §8) |
 | 7 | Existing S3 regression build | `eego_a4` attempted; `metalio_eink4`, `waveshare_epaper_397`, `murphy_m4`, `x4pro`, `sticky`, `papermono`, `x4c` | **pending** | `BoardConfig.h`, `LgfxEpdConfig.h` and `LgfxEpdDriver.cpp` are shared; `eego_a4` failed on a dead local git proxy (`127.0.0.1:7890`), not on code — rerun with the proxy bypass |
 | 8 | Shared X3/X4 image regression build | `default` | **passed** | 2026-09-25: `SUCCESS`, RAM 20.0%, Flash 97.8% (6,409,277 / 6,553,600). Note the C3 image has only ~144 KB of headroom |
 | 9 | `pio check` (cppcheck) on the new files | new SDK board library + platformio env | **pending** | Not run |
-| 10 | Hosted CI | CrossMux CI workflow | **pending** | Not run; `bin/ci-check` enumerates seven envs and does not include `readpico` |
+| 10 | Hosted CI | CrossMax CI workflow | **pending** | Not run; `bin/ci-check` enumerates seven envs and does not include `readpico` |
 | 11 | Repository script/unit tests | `scripts/tests` | **pending** | Not run |
 | 12 | Third-party licensing review of imported data | `e0470_epaper_waveform` waveforms (Apache-2.0) and the epdiy-derived timing (LGPL-3.0-or-later) | **pending** | `read_pico_firmware/README.md` (Acknowledgments) records both licences; no review performed. This gates any code that *imports* the tables rather than re-deriving them |
 | 13 | Flash + esptool hash verification | to be flashed `readpico` image | **pending** | Not flashed. Requires a recorded full-chip backup first (§3.8) |
@@ -1558,7 +1558,7 @@ Sources **not** reachable in this round (so nothing depends on them):
 | 7 | PMU time hooks + `Cw32L010Pmu` backend | `freeink-sdk/libs/hardware/Rtc/{include/Rtc.h,src/Rtc.cpp}` |
 | 8 | PMU battery hook + `Cw32L010Pmu` backend | `freeink-sdk/libs/hardware/BatteryMonitor/{include/BatteryMonitor.h,src/BatteryMonitor.cpp}` |
 | 9 | Build environment | `platformio.ini` (`[readpico_hardware]`, `[env:readpico]`) |
-| 10 | HAL/app integration (sleep + wake policy, clock fallback) | CrossMux `lib/hal/*`, `src/main.cpp` — task 3 |
+| 10 | HAL/app integration (sleep + wake policy, clock fallback) | CrossMax `lib/hal/*`, `src/main.cpp` — task 3 |
 
 ### 5.3 Blockers and their concrete next actions
 
@@ -1572,8 +1572,8 @@ Sources **not** reachable in this round (so nothing depends on them):
 | **B6** | `_lut_2pixel` consumes ≈ 56.5 KiB (**≈ 65 KiB** if GL16 is wired too) of **internal DMA** RAM with the landed tables, and `Panel_EPD::init_intenal()` fails silently to the user if that allocation fails | Log internal heap before/after display `begin()`. Note a null LUT pointer does **not** yield 0 steps (`Panel_EPD.cpp:178-197` substitutes a built-in), so the only real levers are which mode carries which table and how many tables are wired. Do **not** patch M5GFX: the upstream code over-allocates 2× (`Panel_EPD.cpp:228`), but it is a registry dependency |
 | **B7** | ~3.1 MiB of PSRAM is requested by the display stack alone (1.59 MiB `_step_framebuf` + 406 KiB `_buf` + 812 KiB canvas + 203 KiB planes + 102 KiB framebuffer) | Confirm 8 MB octal PSRAM is detected, and log free/largest PSRAM block before and after display `begin()`. Treat the numbers as arithmetic from the cited allocation expressions until measured |
 | **B8** | The 120 MHz flash/PSRAM configuration (and with it the vendor's PSRAM bandwidth) is deliberately not adopted (§2.7), so refreshes will be slower than the reference firmware | After the panel works at default timing, measure refresh time per mode, then evaluate the 120 MHz configuration separately with its documented temperature risk and the `firmware_tuned` incompatibility in mind |
-| **B9** | The CST836U INT# (GPIO43) is not an RTC-capable S3 pin, and the reference firmware does not use it as a host wake source at all (light sleep wakes on GPIO41 and optionally GPIO1) | Decide the CrossMux wake set explicitly: reuse the reference behaviour (IOE INT# + optional pickup + timer) for light sleep. Do not arm GPIO43 as a deep-sleep EXT source — it cannot be one |
-| **B10** | "Deep sleep" on this board is a PMU-driven host shutdown, not `esp_deep_sleep_start()`; the real wake sources (PMU key, AC-in, RTC alarm) have no SDK seam | Add a board-owned seam for the PMU power handoff (`pmuReportReady` / `pmuSoftSleep` / `pmuPowerOff`, §3.4) plus a documented wake-reason path, and record which of key / AC-in / alarm CrossMux exposes. Until then, treat sleep as light sleep only |
+| **B9** | The CST836U INT# (GPIO43) is not an RTC-capable S3 pin, and the reference firmware does not use it as a host wake source at all (light sleep wakes on GPIO41 and optionally GPIO1) | Decide the CrossMax wake set explicitly: reuse the reference behaviour (IOE INT# + optional pickup + timer) for light sleep. Do not arm GPIO43 as a deep-sleep EXT source — it cannot be one |
+| **B10** | "Deep sleep" on this board is a PMU-driven host shutdown, not `esp_deep_sleep_start()`; the real wake sources (PMU key, AC-in, RTC alarm) have no SDK seam | Add a board-owned seam for the PMU power handoff (`pmuReportReady` / `pmuSoftSleep` / `pmuPowerOff`, §3.4) plus a documented wake-reason path, and record which of key / AC-in / alarm CrossMax exposes. Until then, treat sleep as light sleep only |
 | **B11** | SD card detect (FCA9555 P0.6) has no SDK seam, and `SDCardManager` has no card-detect hook (only `setPowerHook`, `SDCardManager.h:79-80`) | Round 1: mount by attempt and expose `BoardReadPico::sdCardPresent()` for UI hints only. If a real CD-driven flow is required, add the hook to `SDCardManager` explicitly rather than reading the expander from an activity (golden rule #4) |
 | **B12** | ✅ **Closed for safety (2026-09-25).** VCOM is factory-written and must not be changed (vendor handover): a value that does not match the glass damages it permanently | `BoardReadPico::pmuVcomMv()` is read-only and returns `-1` on any failure or range violation; there is **no fallback constant**; `epdPowerOn()` returns before energising any rail when it sees `-1`. Nothing in the port calls the PMU's VCOM setter (factory page only). Remaining hardware question: read and record what this unit's factory value actually is, and confirm it is stable across boots |
 | **B13** | This round may create exactly one file, so `docs/engineering/index.md` and the two README language versions are not updated | Schedule the index registration and both README edits as part of the implementation tasks, per `port-device-bsp/SKILL.md:183-187` |
@@ -1652,7 +1652,7 @@ New PlatformIO library `freeink-sdk/libs/display/EpdiyLcd/`, listed only in
   bus/scan timing, the waveform) and feeds frames in.
 
 **Licence.** `src/epdiy/**` is **LGPL-3.0-or-later** (`src/epdiy/LICENSE:19-21`),
-which is copyleft and therefore *not* MIT like the rest of CrossMux. The waveform
+which is copyleft and therefore *not* MIT like the rest of CrossMax. The waveform
 component is Apache-2.0. The vendored tree sits in its own library directory and is
 linked into the readpico image only, so no other target's binary contains it; the
 readpico firmware as a whole does carry the LGPL obligation. Decide deliberately

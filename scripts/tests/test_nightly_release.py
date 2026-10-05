@@ -363,7 +363,7 @@ class NightlyIndexTest(unittest.TestCase):
                 'chip': target['chip'],
                 'flavor': flavor,
                 'version': '1.5.8' if channel == 'stable' else f'1.5.7-rc+{revision[:7]}',
-                'crossmuxSha': revision,
+                'crossmaxSha': revision,
                 'sdkSha': sdk_revision,
                 'assets': [{
                     'role': 'firmware',
@@ -459,7 +459,7 @@ class NightlyIndexTest(unittest.TestCase):
     def test_rejects_mixed_target_revisions(self):
         self.write_all_pairs()
         self.write_pair('sticky', revision='c' * 40)
-        with self.assertRaisesRegex(ValueError, 'target CrossMux revisions do not match'):
+        with self.assertRaisesRegex(ValueError, 'target CrossMax revisions do not match'):
             build_nightly_index.build_index(
                 self.root, 'global', 'https://example.com/', 'now', 'test', 'nightly'
             )
@@ -634,7 +634,7 @@ class PublishedNightlyTest(unittest.TestCase):
                     'environment': nightly_targets.environment_for(target_id, 'nightly', flavor),
                     'flavor': flavor,
                     'version': version,
-                    'crossmuxSha': revision,
+                    'crossmaxSha': revision,
                     'sdkSha': self.sdk_sha,
                     'assets': assets,
                 }
@@ -642,7 +642,7 @@ class PublishedNightlyTest(unittest.TestCase):
                 self.store[url] = json.dumps(manifest).encode()
                 variants[flavor] = {
                     'version': version,
-                    'crossmuxSha': revision,
+                    'crossmaxSha': revision,
                     'sdkSha': self.sdk_sha,
                     'publishedAt': 'now',
                     'manifestUrl': url,
@@ -686,9 +686,9 @@ class PublishedNightlyTest(unittest.TestCase):
         for flavor in nightly_targets.FLAVOR_TOKENS:
             url = self.release_url + nightly_targets.manifest_name(target_id, flavor)
             manifest = json.loads(self.store[url])
-            manifest['crossmuxSha'] = self.old_sha
+            manifest['crossmaxSha'] = self.old_sha
             self.store[url] = json.dumps(manifest).encode()
-            self.index['targets'][target_id]['variants'][flavor]['crossmuxSha'] = self.old_sha
+            self.index['targets'][target_id]['variants'][flavor]['crossmaxSha'] = self.old_sha
         self.write_index()
         with self.assertRaisesRegex(ValueError, 'does not point to the current revision'):
             verify_nightly_release.verify_release(self.index_url, self.current_sha, 'nightly', self.fetch)

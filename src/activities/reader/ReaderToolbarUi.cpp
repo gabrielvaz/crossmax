@@ -13,7 +13,7 @@
 #include "components/UITheme.h"
 #include "components/UIThemeTokens.h"
 #include "components/icons/readerToolbarIcons.h"
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
 #include "components/icons/readerToolbarIcons48.h"
 #endif
 
@@ -110,7 +110,7 @@ void ReaderToolbarUi::screenFn(UiScreen& screen, void* user) {
 void ReaderToolbarUi::buildToolRow(UiScreen& screen, const fui::LayoutAnchor anchor, const int16_t sideInset) {
   const auto& tokens = screen.theme();
   constexpr int iconSize = UiHighDpiProfile::enabled ? UiHighDpiProfile::controlIconSize : 24;
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
   const fui::BitmapRef icons[kToolCount] = {fui::bitmapFromIcon(icon_reader_contents_48),
                                             fui::bitmapFromIcon(icon_reader_text_48),
                                             fui::bitmapFromIcon(icon_reader_more_48)};
@@ -169,7 +169,7 @@ void ReaderToolbarUi::buildToolbar(UiScreen& screen) {
   {
     const fui::Rect band = screen.takeTop(kScrubButton, tokens.spaceLg);
     stepProps_.label = nullptr;
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
     stepProps_.icon = fui::bitmapFromIcon(icon_reader_back_48);
 #else
     stepProps_.icon = fui::bitmapFromIcon(icon_reader_back_24);
@@ -189,7 +189,7 @@ void ReaderToolbarUi::buildToolbar(UiScreen& screen) {
     stepProps_.styles.active.background = fui::Paint::solid(fui::Color::Black);
     stepProps_.styles.active.foreground = fui::Paint::solid(fui::Color::White);
     screen.button(stepProps_, fui::Rect{band.x, band.y, kScrubButton, kScrubButton});
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
     stepProps_.icon = fui::bitmapFromIcon(icon_reader_next_48);
 #else
     stepProps_.icon = fui::bitmapFromIcon(icon_reader_next_24);

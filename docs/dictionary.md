@@ -25,9 +25,9 @@ Not supported: `.syn` synonym files (ignored), dictionaries with 64-bit index of
 2. Download or update a dictionary. A single download is enabled automatically; **Update All** preserves the current selection.
 3. Use **Settings → Reader → Dictionary** to switch between installed dictionaries, or choose **None** to disable lookups.
 
-Online dictionaries are installed under `/.dictionaries/`. Downloads are verified before the old version is replaced, and interrupted installations are recovered the next time the manager opens. Only folders carrying the manager's `.crossmux-resource` marker can be updated or deleted online.
+Online dictionaries are installed under `/.dictionaries/`. Downloads are verified before the old version is replaced, and interrupted installations are recovered the next time the manager opens. Only folders carrying the manager's `.crossmax-resource` marker can be updated or deleted online.
 
-The content profile selected by the current UI language chooses the CrossMux API
+The content profile selected by the current UI language chooses the CrossMax API
 at runtime: China uses `crossmux.cn`, Global uses `crossmux.com`. The UI language
 is also sent as the `lang` query parameter. Both regions use
 `/api/assets/dictionaries/manifest`; third-party configured URLs are unchanged.

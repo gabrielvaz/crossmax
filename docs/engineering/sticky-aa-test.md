@@ -44,7 +44,7 @@ SDK 在每次灰阶正文开始时清理旧暂存数据。HAL 的 `cancelGraysca
 
 ## 历史镜像的安装与回退
 
-适用于已经运行 CrossMux、使用当前双 OTA 分区布局的 Sticky：
+适用于已经运行 CrossMax、使用当前双 OTA 分区布局的 Sticky：
 
 1. 在电脑上解压交付包，运行 `sha256sum -c SHA256SUMS` 验证文件。
 2. 将 `sticky-aa-test2.bin` 和 `sticky-rollback.bin` 复制到 SD 卡。

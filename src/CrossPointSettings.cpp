@@ -789,7 +789,7 @@ void CrossPointSettings::clearSdFontFamily() {
   sdFontFamilyName[0] = '\0';
   sdFontFlashPreload = 0;
   fontFamily = NOTOSANS;
-#ifndef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifndef CROSSMAX_UI_PROFILE_HIGH_DPI
   fontPointSize =
       snapToNearestPointSize(BUILTIN_READER_POINT_SIZES, std::size(BUILTIN_READER_POINT_SIZES), fontPointSize);
 #endif

@@ -13,7 +13,7 @@ pio run -e simulator_eego_a4 -t run_simulator
 
 The target inherits the normal DIO flash mode, 16 MB partition table, single
 framebuffer, and USB CDC settings. Hardware descriptions and drivers live in
-the pinned `0x1abin/freeink-sdk` submodule; CrossMux only adds product behavior:
+the pinned `0x1abin/freeink-sdk` submodule; CrossMax only adds product behavior:
 the board name comes from `BoardConfig::ACTIVE.name`, normal view content has a
 symmetric 28 px safe margin, and AirPage is available. Reading, library,
 settings, Web file transfer, and same-target SD firmware update remain

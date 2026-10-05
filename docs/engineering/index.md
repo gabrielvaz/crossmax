@@ -1,6 +1,6 @@
 # Engineering Reference (Agent System of Record)
 
-This directory is the deep firmware-engineering reference for CrossMux.
+This directory is the deep firmware-engineering reference for CrossMax.
 [AGENTS.md](../../AGENTS.md) (the canonical agent entrypoint) is the **map**: it
 holds the non-negotiable invariants and points here for detail. Read the file
 that matches your task — don't load everything at once.

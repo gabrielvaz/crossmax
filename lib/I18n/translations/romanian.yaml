@@ -3,7 +3,7 @@ _language_code: "RO"
 _order: "8"
 _bcp47: "ro"
 
-STR_CROSSPOINT: "CrossMux"
+STR_CROSSPOINT: "CrossMax"
 STR_BOOTING: "PORNEŞTE"
 STR_SLEEPING: "REPAUS"
 STR_ENTERING_SLEEP: "Intră în repaus..."

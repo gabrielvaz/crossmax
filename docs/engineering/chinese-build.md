@@ -322,7 +322,7 @@ https://crossmux.cn/api/assets/fonts/m<manifest>-b<binary>/fonts.json
 https://crossmux.com/api/assets/fonts/m<manifest>-b<binary>/fonts.json
 ```
 
-Both catalogs are reached through CrossMux; firmware no longer selects GitHub
+Both catalogs are reached through CrossMax; firmware no longer selects GitHub
 or Gitee directly. The returned manifest still supplies immutable asset URLs.
 
 The version numbers come from the firmware's manifest and cpfont constants.

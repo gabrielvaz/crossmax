@@ -1,4 +1,4 @@
-#define CROSSMUX_READER_REFRESH_TEST
+#define CROSSMAX_READER_REFRESH_TEST
 #include <test_ssd1677.cpp>
 
 #include "ReaderRefresh.h"

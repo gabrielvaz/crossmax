@@ -58,7 +58,7 @@ class DependencyStateTest(unittest.TestCase):
             sync_upstream.decide_dependency_action(False, True), "wait-for-pr"
         )
 
-    def test_dependencies_gate_crossmux_in_order(self):
+    def test_dependencies_gate_crossmax_in_order(self):
         self.assertEqual(
             sync_upstream.next_component(
                 {
@@ -84,7 +84,7 @@ class DependencyStateTest(unittest.TestCase):
                     "simulator": status("simulator", "up-to-date"),
                 }
             ),
-            "crossmux",
+            "crossmax",
         )
 
 
@@ -144,7 +144,7 @@ class UpstreamSnapshotPinTest(unittest.TestCase):
         pins = {
             "sdk": "a" * 40,
             "simulator": "b" * 40,
-            "crossmux": "c" * 40,
+            "crossmax": "c" * 40,
         }
         args = sync_upstream.parse_args(
             [
@@ -270,19 +270,19 @@ class UpstreamSnapshotPinTest(unittest.TestCase):
             self.assertEqual(sync_upstream.cmd_publish(args), 0)
             publish.assert_called_once()
 
-    def test_crossmux_start_uses_frozen_target(self):
+    def test_crossmax_start_uses_frozen_target(self):
         pinned = "c" * 40
         pins = {
             "sdk": "a" * 40,
             "simulator": "b" * 40,
-            "crossmux": pinned,
+            "crossmax": pinned,
         }
         statuses = {
             "sdk": status("sdk", "up-to-date"),
             "simulator": status("simulator", "up-to-date"),
         }
         args = argparse.Namespace(
-            component="crossmux",
+            component="crossmax",
             candidate_root="/tmp/candidates",
             behavior_overlap=[],
             upstream_pin=list(pins.items()),
@@ -290,7 +290,7 @@ class UpstreamSnapshotPinTest(unittest.TestCase):
         context = sync_upstream.Context(
             Path("/tmp/root"), "main", "upstream", "origin", "develop"
         )
-        crossmux_status = {"action": "ready", "upstream_sha": pinned}
+        crossmax_status = {"action": "ready", "upstream_sha": pinned}
         state = {
             "conflict_paths": [],
             "overlap_paths": [],
@@ -301,13 +301,13 @@ class UpstreamSnapshotPinTest(unittest.TestCase):
         ), patch.object(
             sync_upstream, "inspect_dependencies", return_value=statuses
         ), patch.object(
-            sync_upstream, "inspect_crossmux", return_value=crossmux_status
+            sync_upstream, "inspect_crossmax", return_value=crossmax_status
         ), patch.object(
             sync_upstream,
             "candidate_path",
-            return_value=Path("/tmp/missing-crossmux-pin-candidate"),
+            return_value=Path("/tmp/missing-crossmax-pin-candidate"),
         ), patch.object(
-            sync_upstream, "clone_crossmux_candidate", return_value=state
+            sync_upstream, "clone_crossmax_candidate", return_value=state
         ) as clone, patch.object(
             sync_upstream, "write_state"
         ), patch.object(sync_upstream, "summarize_state"):
@@ -316,7 +316,7 @@ class UpstreamSnapshotPinTest(unittest.TestCase):
         clone.assert_called_once_with(
             context,
             statuses,
-            Path("/tmp/missing-crossmux-pin-candidate"),
+            Path("/tmp/missing-crossmax-pin-candidate"),
             [],
             pinned,
         )
@@ -326,10 +326,10 @@ class BuildValidationTest(unittest.TestCase):
     def test_sdk_build_materializes_only_the_reviewed_index(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            crossmux = root / "crossmux"
+            crossmax = root / "crossmax"
             candidate = root / "sdk"
-            init_repo(crossmux)
-            commit_file(crossmux, "README.md", "fixture\n", "initial")
+            init_repo(crossmax)
+            commit_file(crossmax, "README.md", "fixture\n", "initial")
             init_repo(candidate)
             commit_file(candidate, "source.cpp", "old source\n", "initial")
             (candidate / "source.cpp").write_text("reviewed source\n")
@@ -348,14 +348,14 @@ class BuildValidationTest(unittest.TestCase):
                 self.assertEqual(extras, ["x4c"])
 
             with patch.object(sync_upstream, "SDK_HOST_TESTS", ()), patch.object(
-                sync_upstream, "run_crossmux_builds", side_effect=build
+                sync_upstream, "run_crossmax_builds", side_effect=build
             ) as builds:
-                sync_upstream.validate_sdk_candidate(candidate, crossmux, False, ["x4c"])
+                sync_upstream.validate_sdk_candidate(candidate, crossmax, False, ["x4c"])
             builds.assert_called_once()
 
-    def test_crossmux_uses_current_release_environment(self):
+    def test_crossmax_uses_current_release_environment(self):
         with patch.object(sync_upstream, "run") as run:
-            sync_upstream.run_crossmux_builds(Path("/tmp/crossmux"), False, ["extra"])
+            sync_upstream.run_crossmax_builds(Path("/tmp/crossmax"), False, ["extra"])
 
         self.assertEqual(
             [invocation.args[0] for invocation in run.call_args_list],

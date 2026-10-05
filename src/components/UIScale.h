@@ -5,7 +5,7 @@
 
 // FreeInkUI font slots. Row heights, header height, and touch sizes are not
 // chosen here: FreeInkApp derives its default metric tokens from the body
-// font's line height. Only INX retains CrossMux's historical UI_10 body;
+// font's line height. Only INX retains CrossMax's historical UI_10 body;
 // other themes use the upstream UI_12 body. Titles remain UI_12.
 struct UIScaleSpec {
   int smallFontId;

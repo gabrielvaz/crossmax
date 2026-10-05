@@ -135,7 +135,7 @@ static bool wakePowerReleasePending = false;
 // Fonts
 // All legacy built-in reader IDs share one 12pt offline fallback. Complete
 // families, other sizes, and style variants come from SD .cpfont files.
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
 #include <builtinFonts/notosans_12_regular.h>
 #include <builtinFonts/notosans_cjk_14.h>
 #include <builtinFonts/notosans_cjk_16.h>
@@ -153,7 +153,7 @@ extern EpdFontFamily control18FontFamily;
 
 // International UI fonts remain primary; CJK subsets are selected only when
 // the primary is missing a Han glyph.
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
 EpdFont smallFont(&notosans_12_regular);
 #else
 EpdFont smallFont(&notosans_8_regular);
@@ -168,7 +168,7 @@ extern EpdFont ui12RegularFont;
 extern EpdFont ui12BoldFont;
 EpdFontFamily ui12FontFamily(&ui12RegularFont, &ui12BoldFont);
 
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
 EpdFontFamily cjk8FontFamily(&offlineReaderFont);
 EpdFont cjk14Font(&notosans_cjk_14);
 EpdFont cjk16Font(&notosans_cjk_16);
@@ -582,7 +582,7 @@ bool setupDisplayAndFonts(bool seamless = false, bool logSdFontLoadHeap = false)
   renderer.setFallbackFont(READER_STATUS_FONT_ID, CJK_UI_8_FONT_ID);
   renderer.setFallbackFont(READER_ESTIMATE_FONT_ID, CJK_UI_10_FONT_ID);
 #endif
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
   renderer.insertFont(UiHighDpiProfile::reader12FontId, offlineReaderFontFamily);
   // Same-size Chinese UI first, then common Chinese and Ubuntu script coverage.
   renderer.insertFont(CJK_UI_14_FONT_ID, ui14FallbackFamily);
@@ -699,7 +699,7 @@ void setup() {
   // and gpio.beginInput() brings the CST836U up immediately after it.
   //
   // 5 (SD) deliberately stays where it is, ahead of the panel: storage is a
-  // boot-time dependency in CrossMux — SETTINGS/APP_STATE/reading state are read
+  // boot-time dependency in CrossMax — SETTINGS/APP_STATE/reading state are read
   // from it before any activity exists, and the SD-failure path itself paints a
   // screen — and this board's SDMMC pins (CLK38/CMD42/D0=44) share nothing with
   // the shared I2C bus (39/40) or the EPD bus (3..21, 45..48), so mounting late

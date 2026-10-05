@@ -20,7 +20,7 @@ constexpr const char* RESET_PATHS[] = {
 
 constexpr const char* PRESERVED_PATHS[] = {
     "/.crosspoint/user-guide.checked",
-    "/CrossMux用户手册.epub",
+    "/CrossMax用户手册.epub",
     "/.crosspoint/state.json",
     "/.crosspoint/recent.json",
     "/.crosspoint/reading_stats.json",
@@ -32,7 +32,7 @@ class SystemSettingsResetTest : public ::testing::Test {
  protected:
   void SetUp() override {
     static std::atomic<unsigned> serial{0};
-    root_ = std::filesystem::temp_directory_path() / ("crossmux-settings-reset-" + std::to_string(serial.fetch_add(1)));
+    root_ = std::filesystem::temp_directory_path() / ("crossmax-settings-reset-" + std::to_string(serial.fetch_add(1)));
     std::error_code error;
     std::filesystem::remove_all(root_, error);
     ASSERT_TRUE(std::filesystem::create_directories(root_, error));

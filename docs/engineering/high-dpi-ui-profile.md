@@ -12,7 +12,7 @@ touch acceptance on the physical panel remain pending.
 ## Current upstream rehearsal
 
 The fixed local rehearsal uses Reader `38280863`, SDK `98b4e427` plus all six
-ReadPico fixes through `e3550ec`, and Simulator `20e73803`, on CrossMux `593c8dbc`.
+ReadPico fixes through `e3550ec`, and Simulator `20e73803`, on CrossMax `593c8dbc`.
 The reviewed source-tree fingerprints are recorded with the rehearsal artifacts;
 these are source exports, not replacement production commits. Existing typography,
 fallbacks, explicit high-density opt-in and calibrated safe insets are retained.
@@ -24,8 +24,8 @@ below remain unchanged. This rehearsal does not flash hardware.
 
 ## Historical integration baseline
 
-- CrossMux [PR #357](https://github.com/0x1abin/crossmux/pull/357) merged as `1cfb2fb209e2b9c8ca6e50d08f6764dffde40ccf`.
-- CrossMux [PR #291](https://github.com/0x1abin/crossmux/pull/291) merged as `a08147cff0a9a197f83e49b033d960a5ed11a334`.
+- CrossMax [PR #357](https://github.com/0x1abin/crossmux/pull/357) merged as `1cfb2fb209e2b9c8ca6e50d08f6764dffde40ccf`.
+- CrossMax [PR #291](https://github.com/0x1abin/crossmux/pull/291) merged as `a08147cff0a9a197f83e49b033d960a5ed11a334`.
 - Simulator [PR #8](https://github.com/0x1abin/crosspoint-simulator/pull/8) merged and pinned at
   `33e585ff6452ea03f6a164f51e379f065e8c2e54`; native ReadPico insets match the SDK:
   top/right/bottom/left `5/5/8/5`.
@@ -36,7 +36,7 @@ below remain unchanged. This rehearsal does not flash hardware.
 The UI preset is calibrated for roughly 300 PPI; this is a density class, not
 an exact panel PPI or an automatic numeric threshold. Device identity, native
 resolution, bezel data and hardware capabilities remain in the board profile.
-Targets opt in explicitly with `CROSSMUX_UI_PROFILE_HIGH_DPI`, owned by
+Targets opt in explicitly with `CROSSMAX_UI_PROFILE_HIGH_DPI`, owned by
 [`UiHighDpiProfile.h`](../../src/components/UiHighDpiProfile.h). Only ReadPico
 hardware/Nightly and its simulator currently select it. Other similar-density
 panels may reuse the fonts, icons and control sizes after viewport validation;
@@ -250,7 +250,7 @@ Simulator captures and successful builds do not establish physical acceptance.
 
 ## PR candidate and latest reader footer (2026-10-02)
 
-The feature commit was rebased onto CrossMux `main` at `237ca0c0`, retaining
+The feature commit was rebased onto CrossMax `main` at `237ca0c0`, retaining
 the Chinese settings/font completion, INX switch repair and unified date/time
 changes. No SDK or simulator revision changed. Before the final footer adjustment,
 full `bin/ci-check` passed all eight hardware targets, formatting, default-target
@@ -297,7 +297,7 @@ recorded; physical refresh, touch and long-running acceptance are pending.
 ## Historical high-density profile cleanup and maintained sources (2026-10-02)
 
 The former screen-specific compile flag and C++ namespace have been replaced
-by `CROSSMUX_UI_PROFILE_HIGH_DPI` / `UiHighDpiProfile`. This is an explicit UI
+by `CROSSMAX_UI_PROFILE_HIGH_DPI` / `UiHighDpiProfile`. This is an explicit UI
 preset selection for similar-density panels, not a numeric PPI test. The only
 current opt-in targets remain ReadPico hardware/Nightly and its simulator.
 Repeated control-gap, content-padding and control-icon sizes reference the
@@ -503,7 +503,7 @@ buffer. Bitmap and vector unload tests preserve built-in fallbacks, and the
 vector path owns only one UI face per distinct size (12/14/16), sharing the
 12/14pt instances with footer registrations.
 
-Builds use an isolated `/tmp/crossmux-screen47-pio` core cache because another
+Builds use an isolated `/tmp/crossmax-screen47-pio` core cache because another
 worktree's PlatformIO run changed shared packages during the initial CI attempt.
 The isolated rerun passed; temporary simulator battery hooks are restored and
 excluded from production binaries. Nightly builds set `CROSSPOINT_RC_HASH` to

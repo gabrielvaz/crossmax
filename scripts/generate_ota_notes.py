@@ -86,7 +86,7 @@ def self_test() -> None:
     }
     assert validate_notes(valid) == valid
     valid_marker = marker(valid)
-    assert extract_notes(f"CrossMux release\n\n{valid_marker}") == valid
+    assert extract_notes(f"CrossMax release\n\n{valid_marker}") == valid
     assert validate_notes({"en": valid["en"][:2], "zh": valid["zh"][:2]})
     assert validate_notes(
         {
@@ -103,7 +103,7 @@ def self_test() -> None:
     rejects({"en": ["one", "two"], "zh": ["中" * 33, "正常"]})
     rejects({"en": [f"note {index}" for index in range(MAX_NOTES + 1)], "zh": ["一"] * 9})
     for value in (
-        "CrossMux release",
+        "CrossMax release",
         "<!-- OTA_NOTES { -->",
         valid_marker + valid_marker,
         '<!-- OTA_NOTES {"en":["line\none","two"],"zh":["一","二"]} -->',

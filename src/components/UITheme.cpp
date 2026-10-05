@@ -29,7 +29,7 @@
 #include "components/themes/lyra/LyraListTheme.h"
 #include "components/themes/lyra/LyraTheme.h"
 #include "components/themes/roundedraff/RoundedRaffTheme.h"
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
 #include <builtinFonts/notosans_14_bold.h>
 #include <builtinFonts/notosans_14_regular.h>
 #include <builtinFonts/notosans_16_bold.h>
@@ -37,7 +37,7 @@
 #endif
 
 // The registered families keep these stable addresses across theme changes.
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
 EpdFont ui10RegularFont(&notosans_14_regular);
 EpdFont ui10BoldFont(&notosans_14_bold);
 EpdFont ui12RegularFont(&notosans_16_regular);
@@ -50,7 +50,7 @@ EpdFont ui12BoldFont(&ubuntu_12_bold);
 #endif
 
 extern EpdFont offlineReaderFont;
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
 EpdFont ui18RegularFont(&notosans_16_regular);
 EpdFont ui18BoldFont(&notosans_16_bold);
 EpdFontFamily control18FontFamily(&ui12RegularFont, &ui12BoldFont);
@@ -74,7 +74,7 @@ UITheme::UITheme() {
 
 void UITheme::reload() {
   const bool inx = SETTINGS.uiTheme == CrossPointSettings::INX;
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
   (void)inx;
   ui18RegularFont.data = &notosans_16_regular;
   ui18BoldFont.data = &notosans_16_bold;

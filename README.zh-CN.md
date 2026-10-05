@@ -1,12 +1,12 @@
-# CrossMux
+# CrossMax
 
 [English](./README.md) | **简体中文**
 
-**CrossMux** 是面向 ESP32 墨水屏设备的 [CrossPoint Reader](https://github.com/crosspoint-reader/crosspoint-reader) 社区 fork。以阅读为核心，同时提供轻量应用、阅读分析、待机表盘和按需联网服务。
+**CrossMax** 是面向 ESP32 墨水屏设备的 [CrossPoint Reader](https://github.com/crosspoint-reader/crosspoint-reader) 社区 fork。以阅读为核心，同时提供轻量应用、阅读分析、待机表盘和按需联网服务。
 
 [固件发布](https://github.com/0x1abin/crossmux/releases) · [用户指南](./USER_GUIDE.md) · [参与贡献](./docs/contributing/README.md)
 
-![CrossMux 运行在 Xteink 设备上](./docs/images/cover.jpg)
+![CrossMax 运行在 Xteink 设备上](./docs/images/cover.jpg)
 
 ## 核心功能
 
@@ -40,18 +40,18 @@ X3/X4 稳定渠道使用 [Stable](https://github.com/0x1abin/crossmux/releases/t
 
 ## 安装固件
 
-1. 打开 [CrossMux Releases](https://github.com/0x1abin/crossmux/releases)，选择渠道和准确设备型号，按该版本的产物链接与安装说明操作。X3/X4 共用固件，S3 必须按板型选择。
+1. 打开 [CrossMax Releases](https://github.com/0x1abin/crossmux/releases)，选择渠道和准确设备型号，按该版本的产物链接与安装说明操作。X3/X4 共用固件，S3 必须按板型选择。
 2. 更换固件前备份 SD 卡数据。使用匹配的安装包；只有应用部分的 `firmware.bin` 不是完整的首次安装镜像。
-3. 对已有固件的 X3/X4，可使用[上游 CrossPoint 网页烧录器](https://crosspointreader.com/#flash-tools)的自定义二进制上传功能：选择 X3/X4，上传 **CrossMux** 应用固件。选择烧录器中的上游版本会安装 CrossPoint。
+3. 对已有固件的 X3/X4，可使用[上游 CrossPoint 网页烧录器](https://crosspointreader.com/#flash-tools)的自定义二进制上传功能：选择 X3/X4，上传 **CrossMax** 应用固件。选择烧录器中的上游版本会安装 CrossPoint。
 4. S3 的安装与恢复请遵循对应[设备文档](./docs/engineering/device-variants.md)和发布说明，不要套用 X3/X4 的烧录命令或偏移地址。
 
-从源码构建并烧录 X3/X4 可使用下方的[开发命令](#开发快速开始)。已安装 CrossMux 时，设备 OTA 按型号、内容区和渠道选择固件；S3 目标没有 Stable 渠道。
+从源码构建并烧录 X3/X4 可使用下方的[开发命令](#开发快速开始)。已安装 CrossMax 时，设备 OTA 按型号、内容区和渠道选择固件；S3 目标没有 Stable 渠道。
 
 Metalio E-Ink 4 使用 `metalio-eink4` Nightly 安装包，型号与板型标签为 `metalio_eink4`。两种语言入口指向同一多语言固件。首次安装、接线和真机验收状态见 [Metalio 设备指南](./docs/engineering/metalio-eink4.md)。[全球网页工具](https://crossmux.com)和[中国网页工具](https://crossmux.cn)将在 Web 支持部署完成、发布目录包含匹配的 Nightly 安装包后显示该设备的烧录入口。
 
 ### USB 锁定的 Xteink 设备
 
-部分设备可能限制 USB 刷写。[上游 Xteink Unlocker](https://crosspointreader.com/#unlock-tool) 是独立工具，使用前请阅读其当前兼容性与恢复说明。不能从 CrossPoint 兼容性推断 CrossMux 可用于锁定设备；刷入不受支持的固件可能导致无法恢复。串口未出现时，也应检查数据线、端口和浏览器权限。
+部分设备可能限制 USB 刷写。[上游 Xteink Unlocker](https://crosspointreader.com/#unlock-tool) 是独立工具，使用前请阅读其当前兼容性与恢复说明。不能从 CrossPoint 兼容性推断 CrossMax 可用于锁定设备；刷入不受支持的固件可能导致无法恢复。串口未出现时，也应检查数据线、端口和浏览器权限。
 
 ## 中文字体与内容区
 
@@ -67,7 +67,7 @@ UI 内置精简的 8/10/12pt 简体中文回退字体。内置阅读字体选项
 
 ```bash
 git clone --recursive https://github.com/0x1abin/crossmux.git
-cd crossmux
+cd crossmax
 
 # 如果尚未初始化子模块：
 git submodule update --init --recursive
@@ -117,7 +117,7 @@ pio run -e simulator_murphy_m4 -t run_simulator # Murphy M4
 pio run -e simulator_readpico -t run_simulator  # Read Pico，竖屏 684x1216
 ```
 
-[CrossMux 模拟器 fork](https://github.com/0x1abin/crosspoint-simulator) 的版本固定在 `platformio.ini` 中。它用于预览 UI 和输入流程，不能验证显示波形、耗电或实际硬件时序。
+[CrossMax 模拟器 fork](https://github.com/0x1abin/crosspoint-simulator) 的版本固定在 `platformio.ini` 中。它用于预览 UI 和输入流程，不能验证显示波形、耗电或实际硬件时序。
 
 Read Pico 窗口自动适应桌面大小，BMP 截图保留原始分辨率。鼠标支持点按、长按和滑动；上箭头/Escape/下箭头对应三个电容键，睡眠后仅电源键 `P` 可以唤醒。原生十六级灰阶图片和 SD 界面字体使用 Read Pico 的处理路径。验证详情见[设备指南](./docs/engineering/read-pico.md#desktop-simulator)。
 
@@ -137,10 +137,10 @@ pio device monitor  # 已连接设备的串口日志
 - [Agent 指南](./AGENTS.md) · [工程文档](./docs/engineering/index.md) · [触屏与 UI](./docs/contributing/touch-and-ui.md)
 - [缓存管理](./docs/engineering/cache-management.md) · [文件格式](./docs/file-formats.md)
 
-请在 [CrossMux Issues](https://github.com/0x1abin/crossmux/issues) 反馈问题和提出改进，贡献 PR 以 **`0x1abin/crossmux:main`** 为目标，每个 PR 聚焦一件事并说明验证方式。代码中保留的 CrossPoint 类名和 SD 卡上的 `/.crosspoint` 数据目录是兼容细节，不代表应向上游仓库提交。该目录也保存设置与阅读进度，不要为了清理某本书的缓存而直接删除整个目录。
+请在 [CrossMax Issues](https://github.com/0x1abin/crossmux/issues) 反馈问题和提出改进，贡献 PR 以 **`0x1abin/crossmux:main`** 为目标，每个 PR 聚焦一件事并说明验证方式。代码中保留的 CrossPoint 类名和 SD 卡上的 `/.crosspoint` 数据目录是兼容细节，不代表应向上游仓库提交。该目录也保存设置与阅读进度，不要为了清理某本书的缓存而直接删除整个目录。
 
 ## 致谢
 
 感谢 [CrossPoint Reader](https://github.com/crosspoint-reader/crosspoint-reader)、[Inx](https://github.com/obijuankenobiii/inx)、[cpr-vcodex](https://github.com/franssjz/cpr-vcodex) 及其贡献者，以及带来最初启发的 [diy-esp32-epub-reader](https://github.com/atomic14/diy-esp32-epub-reader)。
 
-CrossMux 与 Xteink 及任何设备厂商均无隶属关系。上游工具与社区独立于本 fork。仓库许可证见 [LICENSE](./LICENSE)。
+CrossMax 与 Xteink 及任何设备厂商均无隶属关系。上游工具与社区独立于本 fork。仓库许可证见 [LICENSE](./LICENSE)。

@@ -14,7 +14,7 @@
 #include "components/UITheme.h"
 #include "components/UiAppHelpers.h"
 #include "components/icons/inx_apps.h"
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
 #include "components/icons/uiChromeIcons.h"
 #else
 #include "components/icons/inx_tabs.h"
@@ -56,31 +56,31 @@ const char* hintLabel(const char* label) {
 const uint8_t* iconForTab(const MainTab tab) {
   switch (tab) {
     case MainTab::Recent:
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
       return icon_tab_recent_56.bits;
 #else
       return InxRecentTabIcon;
 #endif
     case MainTab::Library:
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
       return icon_tab_library_56.bits;
 #else
       return InxLibraryTabIcon;
 #endif
     case MainTab::Settings:
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
       return icon_tab_settings_56.bits;
 #else
       return InxSettingsTabIcon;
 #endif
     case MainTab::Statistics:
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
       return icon_tab_statistics_56.bits;
 #else
       return InxStatisticsTabIcon;
 #endif
     case MainTab::Apps:
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
       return icon_tab_apps_56.bits;
 #else
       return InxAppsTabIcon;

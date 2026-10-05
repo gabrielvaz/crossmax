@@ -1,6 +1,6 @@
 # Firmware Release Architecture
 
-CrossMux has two release channels, `stable` and `nightly`, managed by one
+CrossMax has two release channels, `stable` and `nightly`, managed by one
 channel-aware pipeline. Hardware identity is not a release channel. Stable
 contains the shared X3/X4 image and a separate Sticky image. Both targets support
 `stable` and `nightly`; the other seven ESP32-S3 release targets remain Nightly-only.
@@ -90,11 +90,11 @@ version of an obsolete build prefix rather than leaving hidden historical object
 The schema-v1 index contains `channel`, `updatedAt`, `buildId`, and a `targets`
 map, plus optional regional `releaseNotes`. Each target repeats its identity and
 channel capabilities and contains `global` and `zh-CN` pointers with version,
-CrossMux SHA, SDK SHA, publish time, and immutable manifest URL. Stable requires
+CrossMax SHA, SDK SHA, publish time, and immutable manifest URL. Stable requires
 both release-note locales.
 
 Every target advances together only when both compatibility manifests are valid
-and have the same CrossMux revision, SDK revision, version, and assets. A
+and have the same CrossMax revision, SDK revision, version, and assets. A
 missing or malformed manifest prevents the whole channel from publishing.
 Build objects are never overwritten; cleanup runs only after the new rolling
 indexes and their assets pass verification.

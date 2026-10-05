@@ -44,7 +44,7 @@ struct Rect { int x,y,width,height; };
 constexpr int UI_12_FONT_ID=1, UI_10_FONT_ID=2, SMALL_FONT_ID=3;
 namespace EpdFontFamily { enum Style { REGULAR, BOLD }; }
 constexpr int STR_CROSSPOINT=0;
-const char* tr(int) {return "CrossMux";}
+const char* tr(int) {return "CrossMax";}
 const unsigned char Logo120[1]{};
 struct GfxRenderer {
  Rect safe; int width=684,height=1216,titleHeight=46,statusHeight=40,smallHeight=34;
@@ -104,7 +104,7 @@ int main() {
  }
 }
 '''
-        for defines in ((), ('CROSSMUX_UI_PROFILE_HIGH_DPI',)):
+        for defines in ((), ('CROSSMAX_UI_PROFILE_HIGH_DPI',)):
             run_cpp(program, defines=defines)
 
     def test_high_dpi_controls_share_geometry_and_leave_gaps(self):
@@ -147,7 +147,7 @@ int main() {
     }
   }
 }
-''', include_dirs=(ROOT / 'src',), defines=('CROSSMUX_UI_PROFILE_HIGH_DPI',))
+''', include_dirs=(ROOT / 'src',), defines=('CROSSMAX_UI_PROFILE_HIGH_DPI',))
 
     def test_high_dpi_status_text_and_battery_fit_top_tab_footer(self):
         source = (ROOT / 'src/components/themes/inx/InxTheme.cpp').read_text()
@@ -195,7 +195,7 @@ int main() {
     InxTheme{}.drawMainTabStatusBar(renderer,{5,5,size.width-10,48});
   }
 }
-''', defines=('CROSSMUX_UI_PROFILE_HIGH_DPI',))
+''', defines=('CROSSMAX_UI_PROFILE_HIGH_DPI',))
 
     def test_high_dpi_builtin_font_cache_identity(self):
         settings = (ROOT / 'src/CrossPointSettings.cpp').read_text()
@@ -235,7 +235,7 @@ int main() {
   assert(settings.getReaderFontId()==123456);
 }
 '''
-        for defines in ((), ('CROSSMUX_UI_PROFILE_HIGH_DPI',)):
+        for defines in ((), ('CROSSMAX_UI_PROFILE_HIGH_DPI',)):
             run_cpp(program, include_dirs=(ROOT / 'src',), defines=defines)
 
     def test_main_tab_content_starts_below_shared_header(self):
@@ -721,7 +721,7 @@ int main() {
   assert(touchTab.currentActivity->tab==MainTab::Library && touchTab.standbyCalls==0);
 }
 '''
-        for defines in ((), ('CROSSMUX_UI_PROFILE_HIGH_DPI', 'FREEINK_DEVICE_READPICO=1')):
+        for defines in ((), ('CROSSMAX_UI_PROFILE_HIGH_DPI', 'FREEINK_DEVICE_READPICO=1')):
             run_cpp(program, include_dirs=(ROOT / 'src',), defines=defines)
 
     def test_inx_recent_render_and_flow_use_the_safe_content_clip(self):

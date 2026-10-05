@@ -1,8 +1,8 @@
 ---
 name: port-device-bsp
 description: >-
-  Bring new hardware into CrossMux through FreeInk SDK board profiles and drivers,
-  CrossMux HAL integration, builds, and recorded physical acceptance. Use for new
+  Bring new hardware into CrossMax through FreeInk SDK board profiles and drivers,
+  CrossMax HAL integration, builds, and recorded physical acceptance. Use for new
   device onboarding, BSP porting, board adaptation, hardware bring-up, 新设备接入,
   BSP 移植, 板卡适配, or 硬件 bring-up. Not for ordinary UI changes or upstream sync.
 ---
@@ -46,12 +46,12 @@ block dependent initialization/flashing, not unrelated inspection and build work
 ## Choose the smallest supported path
 
 Search the pinned SDK's `BoardConfig`, display and hardware libraries for the
-closest match, then inspect its actual callers in CrossMux. Cite the source paths
+closest match, then inspect its actual callers in CrossMax. Cite the source paths
 and lines that justify each proposed change. Do not choose a donor by SoC alone.
 
 | Finding | Route |
 |---|---|
-| SDK already supports the board | Reuse its profile and drivers; add only missing CrossMux integration |
+| SDK already supports the board | Reuse its profile and drivers; add only missing CrossMax integration |
 | New board with supported controllers | Add board configuration and reuse drivers; extend shared drivers only for demonstrated gaps |
 | Unsupported controller | Add the required SDK driver and profile, exposing only capabilities needed by the target |
 | Unsupported chip architecture | Assess toolchain, framework and SDK portability first; report platform work separately from BSP work |
@@ -181,7 +181,7 @@ checks or asking questions. Revalidate evidence affected by subsequent changes.
 
 After the tested approach is selected, remove superseded experiment flags,
 one-shot permissions and duplicate decisions while preserving needed board-level
-calibration. Review the final SDK diff and CrossMux gitlink, reconcile current
+calibration. Review the final SDK diff and CrossMax gitlink, reconcile current
 behavior and pending acceptance in the device document, and update both README
 language versions for new device support. Preserve historical evidence as history,
 not as competing instructions for the current implementation.
@@ -216,9 +216,9 @@ specifies otherwise. Inspect existing changes and remotes before acting.
   with failed/pending checks and concrete next steps. Missing GitHub access remains
   a publication blocker, not a reason to claim a PR exists.
 - If SDK changes are needed, prepare a separate SDK contribution under its own
-  rules. Resolve the CrossMux SDK fork and base from current configuration and
+  rules. Resolve the CrossMax SDK fork and base from current configuration and
   source, rather than assuming the upstream SDK is the contribution target.
-  Cross-link both PRs. While the SDK PR is unmerged, keep the CrossMux PR Draft
+  Cross-link both PRs. While the SDK PR is unmerged, keep the CrossMax PR Draft
   and document the SDK branch, SHA and exact local reproduction steps. Keep the
   existing committed gitlink; do not pin a commit available only in a personal fork
   as the default dependency. Report tests against the temporary SDK checkout as such.

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>文件管理 - CrossMux</title>
+  <title>文件管理 - CrossMax</title>
   <script src="/js/jszip.min.js"><!--#include file="../shared/PluginHost.js.inc" -->
   window.addEventListener('load', () => loadPlugins('files'));
 </script>
@@ -1808,7 +1808,7 @@
 
   if (currentPath !== '/') {
     const leaf = currentPath.split('/').filter(Boolean).pop();
-    if (leaf) document.title = leaf + ' - 文件 - CrossMux';
+    if (leaf) document.title = leaf + ' - 文件 - CrossMax';
   }
 
   // Network status monitoring
@@ -3738,7 +3738,7 @@ function exportLogToFile(filename = null, isBatch = false) {
   }
   // Extract text from log entries
   const entries = logContainer.querySelectorAll('.log-entry');
-  let logText = `CrossMux ${crosspointVersion} - EPUB 转换日志\n`;
+  let logText = `CrossMax ${crosspointVersion} - EPUB 转换日志\n`;
   logText += `生成时间：${new Date().toLocaleString('zh-CN')}\n`;
   logText += `${'='.repeat(60)}\n\n`;
 

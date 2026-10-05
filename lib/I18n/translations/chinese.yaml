@@ -3,7 +3,7 @@ _language_code: "ZH_CN"
 _order: "23"
 _bcp47: "zh-CN"
 
-STR_CROSSPOINT: "CrossMux"
+STR_CROSSPOINT: "CrossMax"
 STR_BOOTING: "启动中"
 STR_SLEEPING: "休眠中"
 STR_ENTERING_SLEEP: "正在进入休眠"

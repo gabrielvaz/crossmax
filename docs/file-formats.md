@@ -17,7 +17,7 @@ bytes invalidates the cache; the output value is left unchanged.
 The current firmware writes this version from `BookMetadataCache`.
 
 > Version 9 forced a one-time rebuild after upstream began NFC-composing titles.
-> Upstream version 10 ignores ambiguous EPUB guide text references. CrossMux uses
+> Upstream version 10 ignores ambiguous EPUB guide text references. CrossMax uses
 > 11 to include both changes while remaining above every shipped value from
 > either lineage. `BookMetadataCache.cpp` is the source of truth.
 
@@ -113,7 +113,7 @@ These versions integrate upstream character spacing, word spacing, list layout
 and Hangul wrapping. The section header adds signed `characterSpacing` and
 unsigned `wordSpacingPercent` after `collectTouchLinks`. TextBlock's BlockStyle
 adds `characterSpacing` after `directionDefined`. Existing caches rebuild;
-CrossMux paragraph spacing levels, first-line indentation and touch-link flags
+CrossMax paragraph spacing levels, first-line indentation and touch-link flags
 remain in the header.
 
 ### Versions 72 / 73

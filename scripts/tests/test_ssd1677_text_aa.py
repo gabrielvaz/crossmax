@@ -1,4 +1,4 @@
-"""Keep SDK text/image routing regressions in CrossMux's Python CI suite."""
+"""Keep SDK text/image routing regressions in CrossMax's Python CI suite."""
 from pathlib import Path
 import subprocess
 import sys

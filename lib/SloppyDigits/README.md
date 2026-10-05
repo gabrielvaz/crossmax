@@ -1,6 +1,6 @@
 # SloppyDigits
 
-`SloppyDigits` is CrossMux's allocation-free procedural digit renderer. The
+`SloppyDigits` is CrossMax's allocation-free procedural digit renderer. The
 sloppy clock chooses a random `Style`; the Chinese calendar and Electronic
 Woodfish use fixed styles and deterministic seeds.
 

@@ -1,6 +1,6 @@
 # INX SDK layout compatibility
 
-INX preserves the visual contract of CrossMux 30db80e3 / FreeInk SDK 094976e1.
+INX preserves the visual contract of CrossMax 30db80e3 / FreeInk SDK 094976e1.
 The shared bridge in `src/components/UIThemeTokens.h` selects `ThemeRow` list
 layout and advance-based digit alignment when `FREEINK_UI_THEME_LAYOUT_POLICY`
 is available. Older SDKs retain their original behavior without these fields.
@@ -27,14 +27,14 @@ rendering, including list styling; only its home metrics differ from Lyra.
 The current local integration reference (2026-10-02) is Reader
 `38280863a50988683c2c63ccd7096e872a48c411`, SDK
 `98b4e427459bc588fdcdcb25e1454f0806cd806b`, and Simulator
-`20e738038605ff4ead6c9fcfe932443d1e143691`, on CrossMux `593c8dbc`.
+`20e738038605ff4ead6c9fcfe932443d1e143691`, on CrossMax `593c8dbc`.
 The SDK integration retains all six ReadPico commits through `e3550ec`;
 rehearsal source-tree fingerprints describe staged resolutions separately from commits. Existing upstream menu entries retain
-their category, relative order and visibility conditions. Shared CrossMux settings
+their category, relative order and visibility conditions. Shared CrossMax settings
 remain visible in every theme at the same category and relative insertion point,
 with their existing action/value binding. This is a structural position, not an
 absolute screen coordinate. Keep one shared settings source, persistent fields,
-Web API, CrossMux update service and device capability checks.
+Web API, CrossMax update service and device capability checks.
 
 Home adds APP to the upstream entries; Carousel's home remains the approved
 exception. Only INX shows the recent, library and apps layout settings. All
@@ -92,7 +92,7 @@ not change INX. The four shared Ubuntu assets in `lib/EpdFont/builtinFonts/` are
 byte-for-byte assets from Reader 93e98bb; do not keep a second Medium/Bold set or
 separate slider registrations at 10pt/12pt. The large-text and Chinese fallbacks
 remain unchanged. Keep historical baselines and record font-induced page
-differences explicitly. Shared pages use upstream small label/value text. CrossMux-only
+differences explicitly. Shared pages use upstream small label/value text. CrossMax-only
 workflows (APP, transactional font install, update channels/release notes) use
 the active theme and preserve their functional bindings.
 
@@ -112,7 +112,7 @@ historical INX baselines and record physical verification independently.
 
 ### Historical fixed-snapshot checkbox increment
 
-The previous rehearsal used CrossMux `9d02f498`, Reader `93e98bb`, SDK `5deb923c`
+The previous rehearsal used CrossMax `9d02f498`, Reader `93e98bb`, SDK `5deb923c`
 and Simulator `8699595`. The approved Reader `d1509d0` and SDK `e41f683e`
 checkbox increments are applied separately. Non-INX boolean controls use their
 upstream checkbox rendering and hit geometry, including reader overlays; INX
@@ -130,8 +130,8 @@ the same cadence consumed by touch and button pagination. Test this bridge with
 `test/inx_navigation/test_legacy_list_adapter.py`, including the last page and gaps.
 
 For English whole-page comparisons with paragraph spacing disabled, select
-CrossMux first-line indent = Indent (1): this corresponds to upstream's implicit
-three-space first-line indent. Auto (0) is a retained CrossMux setting and has
+CrossMax first-line indent = Indent (1): this corresponds to upstream's implicit
+three-space first-line indent. Auto (0) is a retained CrossMax setting and has
 intentionally different semantics. Keep INX comparisons on their original settings.
 
 ### Approved INX setting-control exception

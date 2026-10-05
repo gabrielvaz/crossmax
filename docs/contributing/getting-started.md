@@ -1,6 +1,6 @@
 # Getting Started
 
-This guide helps you build and run CrossMux locally.
+This guide helps you build and run CrossMax locally.
 
 ## Prerequisites
 
@@ -45,7 +45,7 @@ The reported major version must be 21 or newer.
 
 ```sh
 git clone --recursive https://github.com/0x1abin/crossmux.git
-cd crossmux
+cd crossmax
 ```
 
 If you already cloned without submodules:

@@ -293,7 +293,7 @@ constexpr ThemeMetrics values = {.batteryWidth = 15,
 
 class BaseTheme {
  public:
-#if defined(ENABLE_CHINESE_VERSION) || defined(CROSSMUX_UI_PROFILE_HIGH_DPI)
+#if defined(ENABLE_CHINESE_VERSION) || defined(CROSSMAX_UI_PROFILE_HIGH_DPI)
   static constexpr int STATUS_NUMERIC_FONT_ID = -858375107;
 #else
   static constexpr int STATUS_NUMERIC_FONT_ID = SMALL_FONT_ID;

@@ -20,7 +20,7 @@ git status --short
 Preserve unrelated user changes. Confirm the intended remote and branch before
 any push, merge, reset, or other history-changing operation.
 
-## CrossMux contribution target
+## CrossMax contribution target
 
 - Unqualified PR requests target **`0x1abin/crossmux:main`**. In the maintainer
   checkout, `origin` is `0x1abin/crossmux`; push the feature branch there when
@@ -28,14 +28,14 @@ any push, merge, reset, or other history-changing operation.
 - An explicit user-supplied repository or base branch overrides that default.
   If the configured remote differs, resolve the destination before pushing.
 - Contributors using a personal fork push there and open their PR against
-  CrossMux `main`, not upstream CrossPoint `develop` or `master`.
-- Create a focused branch from CrossMux `main`; agents use `codex/<topic>` by
+  CrossMax `main`, not upstream CrossPoint `develop` or `master`.
+- Create a focused branch from CrossMax `main`; agents use `codex/<topic>` by
   default. Human contributors may use `feature/`, `fix/`, `refactor/`, or `docs/`.
 
 ## Upstream synchronization is a separate task
 
 Do not fetch and merge upstream automatically when starting an ordinary change.
-CrossMux integrates its SDK, simulator, and reader upstreams through isolated
+CrossMax integrates its SDK, simulator, and reader upstreams through isolated
 candidates; the current sources and procedure are in the
 [sync-upstream skill](../../.agents/skills/sync-upstream/SKILL.md).
 
@@ -57,7 +57,7 @@ ignored artifacts such as `.pio/`, `compile_commands.json`, or
 [generated-files.md](generated-files.md); edit their inputs and use the
 prescribed generator rather than hand-editing generated output.
 
-Use semantic commit and PR titles such as `docs: align guides with CrossMux` or
+Use semantic commit and PR titles such as `docs: align guides with CrossMax` or
 `fix: handle malformed epub`. Keep each change focused. Report checks actually
 run and hardware validation still needed; documentation-only changes do not
 require device tests. Follow [testing-and-debugging.md](testing-and-debugging.md)

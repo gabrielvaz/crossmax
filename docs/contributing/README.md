@@ -1,6 +1,6 @@
 # Contributing Docs
 
-This section is a lightweight contributor guide for CrossMux, a community fork of CrossPoint Reader.
+This section is a lightweight contributor guide for CrossMax, a community fork of CrossPoint Reader.
 It is written for software developers who may be new to embedded development.
 
 - [Getting Started](./getting-started.md)

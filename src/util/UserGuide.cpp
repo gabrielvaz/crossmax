@@ -96,7 +96,7 @@ void install(const bool simplifiedChinese) {
   // paths/cache strings are each <64 bytes (including the 64-bit host hash). These
   // cold-path strings reuse the Epub/recents APIs; no metadata/ZIP buffers are allocated.
   const Epub epub(asset.path, "/.crosspoint");
-  if (!RECENT_BOOKS.addBook(asset.path, asset.title, "CrossMux", epub.getThumbBmpPath())) {
+  if (!RECENT_BOOKS.addBook(asset.path, asset.title, "CrossMax", epub.getThumbBmpPath())) {
     LOG_ERR("GUIDE", "Failed to save guide in recents; retry on next boot");
     return;
   }
