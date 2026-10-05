@@ -623,7 +623,8 @@ void HomeActivity::loop() {
       // Multi-cover themes (Lyra3Covers and the like) render several recent
       // books side by side: map the finger to the cover it is on instead of
       // always settling on the first book.
-      touchedBook = GUI.recentBookIndexAt(tx, renderer.getScreenWidth());
+      touchedBook = GUI.recentBookIndexAtPoint(
+          tx, ty, Rect{0, metrics.homeTopPadding, renderer.getScreenWidth(), metrics.homeCoverTileHeight});
       touchedBook = std::clamp(touchedBook, 0, static_cast<int>(recentBooks.size()) - 1);
     }
     if (selectorIndex != touchedBook) {
@@ -639,7 +640,8 @@ void HomeActivity::loop() {
       tapX < renderer.getScreenWidth() && tapY >= metrics.homeTopPadding &&
       tapY < metrics.homeTopPadding + metrics.homeCoverTileHeight) {
     if (!isCarousel) {
-      selectorIndex = GUI.recentBookIndexAt(tapX, renderer.getScreenWidth());
+      selectorIndex = GUI.recentBookIndexAtPoint(
+          tapX, tapY, Rect{0, metrics.homeTopPadding, renderer.getScreenWidth(), metrics.homeCoverTileHeight});
       selectorIndex = std::clamp(selectorIndex, 0, static_cast<int>(recentBooks.size()) - 1);
     }
     activateSelection();

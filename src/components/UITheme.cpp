@@ -26,6 +26,7 @@
 #include "components/themes/inx/InxTheme.h"
 #include "components/themes/lyra/Lyra3CoversTheme.h"
 #include "components/themes/lyra/LyraCarouselTheme.h"
+#include "components/themes/lyra/LyraListTheme.h"
 #include "components/themes/lyra/LyraTheme.h"
 #include "components/themes/roundedraff/RoundedRaffTheme.h"
 #ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
@@ -116,6 +117,11 @@ void UITheme::setTheme(CrossPointSettings::UI_THEME type) {
       LOG_DBG("UI", "Using Lyra 3 Covers theme");
       nextTheme = makeUniqueNoThrow<Lyra3CoversTheme>();
       nextMetrics = &Lyra3CoversMetrics::values;
+      break;
+    case CrossPointSettings::UI_THEME::LYRA_LIST:
+      LOG_DBG("UI", "Using Lyra List theme");
+      nextTheme = makeUniqueNoThrow<LyraListTheme>();
+      nextMetrics = &LyraListMetrics::values;
       break;
     case CrossPointSettings::UI_THEME::LYRA_CAROUSEL:
       LOG_DBG("UI", "Using Lyra Carousel theme");

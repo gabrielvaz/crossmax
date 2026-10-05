@@ -256,7 +256,10 @@ class CrossPointSettings : public PersistableStore<CrossPointSettings> {
     ROUNDEDRAFF = 3,
     LYRA_CAROUSEL = 4,
     INX = 5,
-    COVER_GRID = 6
+    // Lyra List sits before Cover Grid so the theme picker can keep dropping
+    // its last entry on boards without PSRAM, where Cover Grid is unavailable.
+    LYRA_LIST = 6,
+    COVER_GRID = 7
   };
   enum INX_TAB_POSITION { INX_TAB_TOP = 0, INX_TAB_BOTTOM = 1, INX_TAB_POSITION_COUNT };
 

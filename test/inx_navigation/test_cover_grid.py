@@ -38,11 +38,13 @@ struct ThemeMetrics {};
 struct BaseTheme {virtual ~BaseTheme()=default;};
 struct LyraTheme:BaseTheme{}; struct RoundedRaffTheme:BaseTheme{};
 struct Lyra3CoversTheme:BaseTheme{}; struct LyraCarouselTheme:BaseTheme{}; struct InxTheme:BaseTheme{};
+struct LyraListTheme:BaseTheme{};
 namespace BaseMetrics {const ThemeMetrics values{};}
 namespace LyraMetrics {const ThemeMetrics values{};}
 namespace RoundedRaffMetrics {const ThemeMetrics values{};}
 namespace Lyra3CoversMetrics {const ThemeMetrics values{};}
 namespace LyraCarouselMetrics {const ThemeMetrics values{};}
+namespace LyraListMetrics {const ThemeMetrics values{};}
 namespace InxMetrics {const ThemeMetrics values{};}
 template<class T> std::unique_ptr<T> makeUniqueNoThrow(){return oom?nullptr:std::make_unique<T>();}
 struct Font {const int* data; Font(const int* p=nullptr):data(p){} }; using EpdFont=Font;
@@ -61,8 +63,8 @@ struct UITheme {
 @METHODS@
 @LABELS@
 int main(){
- static_assert(CrossPointSettings::LYRA_CAROUSEL==4 && CrossPointSettings::INX==5 && CrossPointSettings::COVER_GRID==6);
- for(bool available:{false,true}) for(int saved=0;saved<=6;++saved){
+ static_assert(CrossPointSettings::LYRA_CAROUSEL==4 && CrossPointSettings::INX==5 && CrossPointSettings::LYRA_LIST==6 && CrossPointSettings::COVER_GRID==7);
+ for(bool available:{false,true}) for(int saved=0;saved<=7;++saved){
   psram=available; SETTINGS.uiTheme=saved; UITheme theme;
   theme.reload();
   const bool inx=saved==5;
@@ -71,15 +73,16 @@ int main(){
   assert(ui10RegularFont.data==&ubuntu_10_regular && ui10BoldFont.data==&ubuntu_10_bold);
   assert(ui12RegularFont.data==&ubuntu_12_regular && ui12BoldFont.data==&ubuntu_12_bold);
   assert(SETTINGS.uiTheme==saved);
-  assert(theme.currentType==(saved==6&&!psram?1:saved));
-  assert(UITheme::hasCoverGridHome()==(saved==6&&psram));
-  const auto values=homeThemeValues(); assert(values.size()==(psram?7:6));
+  assert(theme.currentType==(saved==7&&!psram?1:saved));
+  assert(UITheme::hasCoverGridHome()==(saved==7&&psram));
+  const auto values=homeThemeValues(); assert(values.size()==(psram?8:7));
   assert(values[4]==StrId::STR_THEME_LYRA_CAROUSEL && values[5]==StrId::STR_THEME_INX);
-  if(psram) assert(values[6]==StrId::STR_THEME_COVER_GRID);
+  assert(values[6]==StrId::STR_THEME_LYRA_LIST);
+  if(psram) assert(values[7]==StrId::STR_THEME_COVER_GRID);
  }
- oom=true; SETTINGS.uiTheme=6; UITheme theme; theme.setTheme(CrossPointSettings::COVER_GRID);
+ oom=true; SETTINGS.uiTheme=7; UITheme theme; theme.setTheme(CrossPointSettings::COVER_GRID);
  assert(theme.currentTheme==&theme.fallbackTheme && theme.currentType==CrossPointSettings::CLASSIC);
- assert(SETTINGS.uiTheme==6);
+ assert(SETTINGS.uiTheme==7);
 }
 '''
 for key, value in {'ENUM':enum,'IDS':','.join(ids),'LABELS':label_method,

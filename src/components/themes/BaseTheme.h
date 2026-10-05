@@ -386,6 +386,14 @@ class BaseTheme {
   // and the like) override this so a touch directly selects the book whose
   // cover the finger is on, matching what the page-turn keys already do.
   virtual int recentBookIndexAt(int x, int screenWidth) const;
+  // Same hit test, for themes whose rows stack down the tile instead of across
+  // it: those need the Y the finger landed on, which the horizontal form
+  // cannot carry. Default keeps the side-by-side mapping so only the vertical
+  // themes have to care.
+  virtual int recentBookIndexAtPoint(int x, int y, Rect tile) const {
+    (void)y;
+    return recentBookIndexAt(x, tile.width);
+  }
   virtual void drawButtonMenu(GfxRenderer& renderer, Rect rect, int buttonCount, int selectedIndex,
                               const std::function<std::string(int index)>& buttonLabel,
                               const std::function<UIIcon(int index)>& rowIcon, int rowSpacing = -1) const;
