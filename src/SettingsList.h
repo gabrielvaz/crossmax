@@ -222,7 +222,7 @@ inline const std::vector<SettingInfo>& getBaseSettingsList() {
     // protection fault on the first settings read). push_back reuses one
     // temporary slot per entry.
     std::vector<SettingInfo> v;
-    v.reserve(90);
+    v.reserve(91);
     // --- Display ---
     v.push_back(SettingInfo::Enum(StrId::STR_SLEEP_SCREEN, &CrossPointSettings::sleepScreen,
                                   std::move(sleepScreenValues), "sleepScreen", StrId::STR_CAT_DISPLAY));
@@ -231,6 +231,8 @@ inline const std::vector<SettingInfo>& getBaseSettingsList() {
     v.push_back(SettingInfo::Enum(StrId::STR_SLEEP_COVER_FILTER, &CrossPointSettings::sleepScreenCoverFilter,
                                   {StrId::STR_NONE_OPT, StrId::STR_FILTER_CONTRAST, StrId::STR_INVERTED},
                                   "sleepScreenCoverFilter", StrId::STR_CAT_DISPLAY));
+    v.push_back(SettingInfo::Toggle(StrId::STR_SLEEP_TIMESTAMP, &CrossPointSettings::sleepScreenTimestamp,
+                                    "sleepScreenTimestamp", StrId::STR_CAT_DISPLAY));
     v.push_back(SettingInfo::Enum(StrId::STR_QUICK_RESUME_TIMEOUT, &CrossPointSettings::quickResumeSleepScreen,
                                   {StrId::STR_STATE_OFF, StrId::STR_STATE_ON}, "quickResumeSleepScreen",
                                   StrId::STR_CAT_DISPLAY));

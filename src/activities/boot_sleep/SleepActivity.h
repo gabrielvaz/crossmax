@@ -24,6 +24,8 @@ class SleepActivity final : public Activity {
   void renderLastScreenSleepScreen() const;
   void renderTransparentCustomSleepScreen() const;
   void renderBlankSleepScreen() const;
+  // Time and date of this sleep, painted over the frame already on the panel.
+  void stampSleepTime() const;
 
   bool fromTimeout = false;
 };

@@ -324,6 +324,10 @@ class CrossPointSettings : public PersistableStore<CrossPointSettings> {
   uint8_t sleepScreenCoverMode = FIT;
   // Sleep screen cover filter
   uint8_t sleepScreenCoverFilter = NO_FILTER;
+  // Stamp the time and date the device went to sleep under the sleep image.
+  // The panel holds one frame while asleep, so this reads as "stopped reading
+  // at", not as a clock: it never advances until the next sleep.
+  uint8_t sleepScreenTimestamp = 0;
   // Status bar settings (statusBar is retained only for settings.bin migration).
   uint8_t statusBar = FULL;
   uint8_t statusBarChapterPageCount = 1;

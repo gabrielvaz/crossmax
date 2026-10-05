@@ -25,6 +25,7 @@
 #include "CrossPointState.h"
 #include "activities/reader/ReaderUtils.h"
 #include "components/UITheme.h"
+#include "util/TimeUtils.h"
 #include "fontIds.h"
 #include "images/MoonIcon.h"
 
@@ -552,20 +553,27 @@ void SleepActivity::onEnter() {
 
   switch (SETTINGS.sleepScreen) {
     case (CrossPointSettings::SLEEP_SCREEN_MODE::BLANK):
+      // Blank is a deliberately empty panel; a timestamp would undo it.
       return renderBlankSleepScreen();
     case (CrossPointSettings::SLEEP_SCREEN_MODE::CUSTOM):
-      return renderCustomSleepScreen();
+      renderCustomSleepScreen();
+      break;
     case (CrossPointSettings::SLEEP_SCREEN_MODE::COVER):
-      return renderCoverSleepScreen();
+      renderCoverSleepScreen();
+      break;
     case (CrossPointSettings::SLEEP_SCREEN_MODE::COVER_CUSTOM):
       if (APP_STATE.lastSleepFromReader) {
-        return renderCoverSleepScreen();
+        renderCoverSleepScreen();
       } else {
-        return renderCustomSleepScreen();
+        renderCustomSleepScreen();
       }
+      break;
     default:
-      return renderDefaultSleepScreen();
+      renderDefaultSleepScreen();
+      break;
   }
+
+  stampSleepTime();
 }
 
 void SleepActivity::renderCustomSleepScreen() const {
@@ -879,6 +887,34 @@ void SleepActivity::renderCoverSleepScreen() const {
   }
 
   return (this->*renderNoCoverSleepScreen)();
+}
+
+void SleepActivity::stampSleepTime() const {
+  if (!SETTINGS.sleepScreenTimestamp) return;
+
+  char clock[16];
+  if (!TimeUtils::formatCurrentTime(clock, sizeof(clock), SETTINGS.clockFormat == 1)) return;
+  std::tm now{};
+  if (!TimeUtils::getLocalDateTime(TimeUtils::getCurrentValidTimestamp(), now)) return;
+
+  char stamp[40];
+  snprintf(stamp, sizeof(stamp), "%s  %02u/%02u/%04d", clock, static_cast<unsigned>(now.tm_mday),
+           static_cast<unsigned>(now.tm_mon + 1), now.tm_year + 1900);
+
+  constexpr int bottomMargin = 18;
+  constexpr int padding = 8;
+  const int textWidth = renderer.getTextWidth(UI_12_FONT_ID, stamp);
+  const int lineHeight = renderer.getLineHeight(UI_12_FONT_ID);
+  const int bandHeight = lineHeight + 2 * padding;
+  const int x = (renderer.getScreenWidth() - textWidth) / 2;
+  const int y = renderer.getScreenHeight() - bottomMargin - bandHeight;
+
+  // A plate behind the text: the image underneath is arbitrary, and black on
+  // a dark cover would be unreadable.
+  renderer.fillRect(x - padding, y, textWidth + 2 * padding, bandHeight, false);
+  renderer.drawRect(x - padding, y, textWidth + 2 * padding, bandHeight, true);
+  renderer.drawText(UI_12_FONT_ID, x, y + padding, stamp, true);
+  renderer.displayBuffer(HalDisplay::FAST_REFRESH);
 }
 
 void SleepActivity::renderLastScreenSleepScreen() const {
