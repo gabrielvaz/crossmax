@@ -25,8 +25,14 @@ inline constexpr int coverHeight = rowHeight - 2 * rowVPadding;
 // slot crops rather than stretches whatever the book actually ships.
 inline constexpr int coverWidth = coverHeight * 2 / 3;
 
+constexpr int statusBandHeight = 30;
+
 constexpr ThemeMetrics values = [] {
   ThemeMetrics v = LyraMetrics::values;
+  // Room for two bands: clock and battery on top, the greeting under it.
+  v.homeTopPadding = LyraMetrics::values.homeTopPadding + statusBandHeight;
+  // The clock lives in the status band this theme draws itself.
+  v.headerShowsClock = false;
   v.homeCoverTileHeight = tileHeight;
   v.homeCoverHeight = coverHeight;
   v.homeRecentBooksCount = rowCount;

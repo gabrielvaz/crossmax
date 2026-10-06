@@ -543,6 +543,8 @@ void ActivityManager::goToPlugins(bool showOpds) {
   replaceActivityWith<PluginCatalogActivity>(showOpds, /*rootMode=*/true);
 }
 
+void ActivityManager::goToPluginCatalog() { goToPlugins(/*showOpds=*/false); }
+
 void ActivityManager::goToReader(std::string path, const bool allowFastInitialRefresh) {
   if (path.empty()) {
     goToFileBrowser("/");

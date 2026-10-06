@@ -14,6 +14,7 @@
 #include "components/UITheme.h"
 #include "components/icons/cover.h"
 #include "fontIds.h"
+#include "util/ReadingStatsAnalytics.h"
 
 namespace {
 constexpr int kCoverTextGap = 16;
@@ -26,14 +27,30 @@ constexpr int kPlaceholderIconSize = 32;
 
 int rowTop(const Rect& tile, const int index) { return tile.y + LyraListMetrics::rowHeight * index; }
 
-// Percentage the reader last reached, or none when the book was never opened.
-// Matching by path alone misses books that moved on the card, which is what the
-// title/author fallback inside the store is for.
-bool readPercentOf(const RecentBook& book, uint8_t& out) {
+// Time already spent, time still to go, and how far in. Matching by path alone
+// misses books that moved on the card, which is what the title/author fallback
+// inside the store is for.
+//
+// The estimate extrapolates from this reader's own pace on this book: the
+// elapsed time covers `percent`, so the whole book costs elapsed/percent. It
+// needs a few percent on the clock before it says anything, or an early
+// session would promise a forty-hour novel.
+std::string readingSummaryOf(const RecentBook& book) {
   const ReadingBookStats* stats = READING_STATS.findMatchingBookForPath(book.path, book.title, book.author);
-  if (stats == nullptr) return false;
-  out = std::min<uint8_t>(stats->lastProgressPercent, 100);
-  return true;
+  if (stats == nullptr) return {};
+
+  const uint8_t percent = std::min<uint8_t>(stats->lastProgressPercent, 100);
+  std::string summary = ReadingStatsAnalytics::formatDurationHm(stats->totalReadingMs);
+
+  constexpr uint8_t kMinPercentForEstimate = 3;
+  if (percent >= kMinPercentForEstimate && percent < 100 && stats->totalReadingMs > 0) {
+    const uint64_t wholeBookMs = stats->totalReadingMs * 100ULL / percent;
+    summary += " / Est. " + ReadingStatsAnalytics::formatDurationHm(wholeBookMs - stats->totalReadingMs);
+  }
+
+  char tail[8];
+  snprintf(tail, sizeof(tail), " / %u%%", static_cast<unsigned>(percent));
+  return summary + tail;
 }
 }  // namespace
 
@@ -104,22 +121,24 @@ void LyraListTheme::drawRecentBookCover(GfxRenderer& renderer, Rect rect, const 
     const std::string title = renderer.truncatedText(UI_12_FONT_ID, recentBooks[i].title.c_str(), textWidth);
     renderer.drawText(UI_12_FONT_ID, textX, titleY, title.c_str(), true);
 
-    uint8_t percent = 0;
-    char percentLabel[8] = {};
-    int percentWidth = 0;
-    if (readPercentOf(recentBooks[i], percent)) {
-      snprintf(percentLabel, sizeof(percentLabel), "%u%%", static_cast<unsigned>(percent));
-      percentWidth = renderer.getTextWidth(SMALL_FONT_ID, percentLabel);
-    }
+    // The numbers are the point of this line, so the author gives up width
+    // first: it is the one part the reader already knows by heart.
+    const std::string summary = readingSummaryOf(recentBooks[i]);
+    const std::string separator = summary.empty() ? "" : " - ";
+    const int summaryWidth = summary.empty() ? 0 : renderer.getTextWidth(SMALL_FONT_ID, summary.c_str());
+    const int separatorWidth = summary.empty() ? 0 : renderer.getTextWidth(SMALL_FONT_ID, separator.c_str());
 
     const int authorY = titleY + renderer.getLineHeight(UI_12_FONT_ID) + kLineGap;
-    const int authorWidth = std::max(0, textWidth - percentWidth - kPercentGap);
+    const int authorWidth = std::max(0, textWidth - summaryWidth - separatorWidth);
     const std::string author = renderer.truncatedText(SMALL_FONT_ID, recentBooks[i].author.c_str(), authorWidth);
-    if (!author.empty()) {
-      renderer.drawText(SMALL_FONT_ID, textX, authorY, author.c_str(), true);
+
+    std::string secondLine = author;
+    if (!summary.empty()) {
+      if (!secondLine.empty()) secondLine += separator;
+      secondLine += summary;
     }
-    if (percentWidth > 0) {
-      renderer.drawText(SMALL_FONT_ID, textX + textWidth - percentWidth, authorY, percentLabel, true);
+    if (!secondLine.empty()) {
+      renderer.drawText(SMALL_FONT_ID, textX, authorY, secondLine.c_str(), true);
     }
   }
 }
