@@ -16,10 +16,6 @@
 #include "util/BookCoverLoader.h"
 
 namespace {
-// Cache hits are fast enough that repainting after each one would make the
-// scan slower than the work it reports. A generated cover always repaints:
-// inflating it borrows the framebuffer, so the screen has to be rebuilt.
-constexpr uint16_t kRefreshEveryCachedBooks = 8;
 constexpr int kBarHeight = 12;
 constexpr int kRowGap = 10;
 
@@ -121,7 +117,6 @@ void LibraryScanActivity::processNextBook() {
   }
 
   ++processed;
-  if (generated || processed >= bookCount || processed % kRefreshEveryCachedBooks == 0) requestUpdate();
 }
 
 void LibraryScanActivity::loop() {
@@ -145,9 +140,8 @@ void LibraryScanActivity::loop() {
         elapsedMs = millis() - startedMs;
         index.close();
         requestUpdate();
-        return;
       }
-      processNextBook();
+      // The work itself happens in render(), which holds the render lock.
       return;
 
     case Phase::Done:
@@ -246,4 +240,12 @@ void LibraryScanActivity::render(RenderLock&&) {
   const auto labels = mappedInput.mapLabels(backLabel, confirmLabel, confirmLabel, confirmLabel);
   GUI.drawButtonHints(renderer, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
   renderer.displayBuffer(HalDisplay::FAST_REFRESH);
+
+  // One book per painted frame. This runs while the caller's RenderLock is
+  // still held, which is what makes borrowing the framebuffer for the cover
+  // decoder safe; doing it from loop() races the render task.
+  if (phase == Phase::Covers) {
+    processNextBook();
+    requestUpdate();
+  }
 }
