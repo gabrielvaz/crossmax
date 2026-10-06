@@ -3,7 +3,7 @@
 ## Current upstream rehearsal
 
 The fixed local rehearsal uses Reader `38280863`, SDK `98b4e427` plus all six
-ReadPico fixes through `e3550ec`, and Simulator `20e73803`, on CrossMux `593c8dbc`.
+ReadPico fixes through `e3550ec`, and Simulator `20e73803`, on CrossMax `593c8dbc`.
 The reviewed source-tree fingerprints are recorded with the rehearsal artifacts;
 these are source exports, not replacement production commits. Existing typography,
 fallbacks, explicit high-density opt-in and calibrated safe insets are retained.
@@ -126,7 +126,7 @@ in ignored directories; none are part of the PR.
 
 This rebuilt application is stored in
 `.cache/firmware/metalio_eink4-inx-pr-final/`, with its build and validation logs.
-It is an application image for the existing CrossMux Wi-Fi update flow, not a
+It is an application image for the existing CrossMax Wi-Fi update flow, not a
 merged full-install image. It has not been flashed. The earlier no-footer-clock
 candidate and device backups are preserved.
 

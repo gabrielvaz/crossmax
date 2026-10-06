@@ -12,6 +12,7 @@
 #include <I18n.h>
 #include <Memory.h>
 #include <PNGdec.h>
+#include <SloppyDigits.h>
 #include <Xtc.h>
 
 #include <algorithm>
@@ -23,12 +24,18 @@
 
 #include "CrossPointSettings.h"
 #include "CrossPointState.h"
+#include "ReadingStatsStore.h"
 #include "activities/reader/ReaderUtils.h"
 #include "components/UITheme.h"
 #include "fontIds.h"
 #include "images/MoonIcon.h"
+#include "util/TimeUtils.h"
 
 namespace {
+
+// Fixed style: the sleep card should look the same every night, unlike the
+// standby clock face which re-rolls its handwriting on every shake.
+constexpr sloppy::Style kClockStyle{sloppy::AlphabetId::Geometric, 0.0f, 7, 0.0f, 0.0f, 18, false};
 
 HalDisplay::GrayscaleMode sleepGrayscaleMode(const GfxRenderer& renderer) {
   return renderer.grayscaleCapabilities(HalDisplay::GrayscaleMode::Direct).supported()
@@ -552,19 +559,27 @@ void SleepActivity::onEnter() {
 
   switch (SETTINGS.sleepScreen) {
     case (CrossPointSettings::SLEEP_SCREEN_MODE::BLANK):
+      // Blank is a deliberately empty panel; a timestamp would undo it.
       return renderBlankSleepScreen();
+    case (CrossPointSettings::SLEEP_SCREEN_MODE::OWNER_CARD):
+      // Draws its own clock and contact lines; the cover footer does not apply.
+      return renderOwnerCardSleepScreen();
     case (CrossPointSettings::SLEEP_SCREEN_MODE::CUSTOM):
-      return renderCustomSleepScreen();
+      renderCustomSleepScreen();
+      break;
     case (CrossPointSettings::SLEEP_SCREEN_MODE::COVER):
-      return renderCoverSleepScreen();
+      renderCoverSleepScreen();
+      break;
     case (CrossPointSettings::SLEEP_SCREEN_MODE::COVER_CUSTOM):
       if (APP_STATE.lastSleepFromReader) {
-        return renderCoverSleepScreen();
+        renderCoverSleepScreen();
       } else {
-        return renderCustomSleepScreen();
+        renderCustomSleepScreen();
       }
+      break;
     default:
-      return renderDefaultSleepScreen();
+      renderDefaultSleepScreen();
+      break;
   }
 }
 
@@ -665,15 +680,26 @@ void SleepActivity::renderBitmapSleepScreen(const Bitmap& bitmap, const bool pre
     renderer.displayBuffer(HalDisplay::HALF_REFRESH);
     return;
   }
+  drawSleepStamp();
 
   if (!preserveBackground &&
       SETTINGS.sleepScreenCoverFilter == CrossPointSettings::SLEEP_SCREEN_COVER_FILTER::INVERTED_BLACK_AND_WHITE) {
     renderer.invertScreen();
   }
 
-  const bool absolute = hasGreyscale && renderer.grayscaleCapabilities(sleepGrayscaleMode(renderer)).supported();
+  // Upstream 92ef5707 (#3541) routed sleep images through the newer grayscale
+  // mode. On this panel the base frame reaches it and the planes never compose
+  // over it, so the sleep screen goes white and the cover never shows. 1.6.0,
+  // which renders covers correctly on the same hardware, always took the OEM
+  // path below, so sleep images stay pinned to it.
+  constexpr bool kAbsoluteGrayscaleSleepWorks = false;
+  const bool absolute = kAbsoluteGrayscaleSleepWorks && hasGreyscale &&
+                        renderer.grayscaleCapabilities(sleepGrayscaleMode(renderer)).supported();
   if (absolute) {
-    if (!renderer.displayGrayscaleBase(sleepGrayscaleMode(renderer))) return;
+    if (!renderer.displayGrayscaleBase(sleepGrayscaleMode(renderer))) {
+      LOG_ERR("SLP", "grayscale base refused the frame; nothing was sent to the panel");
+      return;
+    }
   } else if (hasGreyscale) {
     // OEM grayscale pipeline base. Must stay HALF: the gray nudge LUT is
     // calibrated against the pixel state the single-pass HALF waveform leaves
@@ -697,15 +723,19 @@ void SleepActivity::renderBitmapSleepScreen(const Bitmap& bitmap, const bool pre
         ready = false;
         break;
       }
+      // Solid black text on a solid white plate reads the same in both planes,
+      // so repeating the draw per plane keeps the footer out of the gray mix.
+      drawSleepStamp();
       if (plane == GfxRenderer::GRAYSCALE_LSB)
         renderer.copyGrayscaleLsbBuffers();
       else
         renderer.copyGrayscaleMsbBuffers();
     }
-    if (ready)
+    if (ready) {
       renderer.displayGrayBuffer();
-    else
+    } else {
       LOG_ERR("SLP", "Incomplete grayscale image; keeping the current display");
+    }
     renderer.setRenderMode(GfxRenderer::BW);
   }
 }
@@ -881,6 +911,69 @@ void SleepActivity::renderCoverSleepScreen() const {
   return (this->*renderNoCoverSleepScreen)();
 }
 
+void SleepActivity::drawSleepStamp() const {
+  const uint8_t mode = SETTINGS.sleepScreenTimestamp;
+  if (mode == CrossPointSettings::SLEEP_STAMP_OFF) return;
+
+  // Line one: when this sleep started, and how far into the book it was.
+  char clock[16];
+  if (!TimeUtils::formatCurrentTime(clock, sizeof(clock), SETTINGS.clockFormat == 1)) return;
+  std::tm when{};
+  if (!TimeUtils::getLocalDateTime(TimeUtils::getCurrentValidTimestamp(), when)) return;
+
+  char progress[8] = {};
+  if (!APP_STATE.openEpubPath.empty()) {
+    const ReadingBookStats* stats = READING_STATS.findMatchingBookForPath(APP_STATE.openEpubPath);
+    if (stats != nullptr) {
+      snprintf(progress, sizeof(progress), "  %u%%",
+               static_cast<unsigned>(std::min<int>(stats->lastProgressPercent, 100)));
+    }
+  }
+
+  char first[48];
+  snprintf(first, sizeof(first), "%s  %02u/%02u/%04d%s", clock, static_cast<unsigned>(when.tm_mday),
+           static_cast<unsigned>(when.tm_mon + 1), when.tm_year + 1900, progress);
+
+  // Line two: whoever should get the reader back. Either field alone is enough.
+  char second[72] = {};
+  if (mode == CrossPointSettings::SLEEP_STAMP_OWNER) {
+    const bool hasName = SETTINGS.ownerName[0] != '\0';
+    const bool hasPhone = SETTINGS.ownerPhone[0] != '\0';
+    if (hasName && hasPhone) {
+      snprintf(second, sizeof(second), "%s  ·  %s", SETTINGS.ownerName, SETTINGS.ownerPhone);
+    } else if (hasName) {
+      snprintf(second, sizeof(second), "%s", SETTINGS.ownerName);
+    } else if (hasPhone) {
+      snprintf(second, sizeof(second), "%s", SETTINGS.ownerPhone);
+    }
+  }
+
+  constexpr int bottomMargin = 18;
+  constexpr int padding = 8;
+  constexpr int lineGap = 4;
+  const int lineHeight = renderer.getLineHeight(UI_12_FONT_ID);
+  const int smallHeight = renderer.getLineHeight(SMALL_FONT_ID);
+  const bool twoLines = second[0] != '\0';
+
+  const int firstWidth = renderer.getTextWidth(UI_12_FONT_ID, first);
+  const int secondWidth = twoLines ? renderer.getTextWidth(SMALL_FONT_ID, second) : 0;
+  const int textWidth = std::max(firstWidth, secondWidth);
+  const int bandHeight = lineHeight + (twoLines ? lineGap + smallHeight : 0) + 2 * padding;
+  const int bandX = (renderer.getScreenWidth() - textWidth) / 2 - padding;
+  const int bandWidth = textWidth + 2 * padding;
+  const int bandY = renderer.getScreenHeight() - bottomMargin - bandHeight;
+
+  // A plate behind the text: the cover underneath is arbitrary, and black on
+  // a dark cover would be unreadable.
+  renderer.fillRect(bandX, bandY, bandWidth, bandHeight, false);
+  renderer.drawRect(bandX, bandY, bandWidth, bandHeight, true);
+  renderer.drawText(UI_12_FONT_ID, (renderer.getScreenWidth() - firstWidth) / 2, bandY + padding, first, true);
+  if (twoLines) {
+    renderer.drawText(SMALL_FONT_ID, (renderer.getScreenWidth() - secondWidth) / 2,
+                      bandY + padding + lineHeight + lineGap, second, true);
+  }
+}
+
 void SleepActivity::renderLastScreenSleepScreen() const {
   const auto pageHeight = renderer.getScreenHeight();
   renderer.drawImage(MoonIcon, 0, pageHeight - MOONICON_HEIGHT, MOONICON_WIDTH, MOONICON_HEIGHT);
@@ -892,6 +985,59 @@ void SleepActivity::renderLastScreenSleepScreen() const {
   } else {
     renderer.displayBuffer(HalDisplay::FAST_REFRESH);
   }
+}
+
+void SleepActivity::renderOwnerCardSleepScreen() const {
+  const int pageWidth = renderer.getScreenWidth();
+  const int pageHeight = renderer.getScreenHeight();
+  renderer.clearScreen();
+
+  std::tm when{};
+  const bool clockValid = TimeUtils::getLocalDateTime(TimeUtils::getCurrentValidTimestamp(), when);
+
+  char hhmm[8] = "--:--";
+  char date[32] = {};
+  if (clockValid) {
+    unsigned hour = static_cast<unsigned>(when.tm_hour);
+    if (SETTINGS.clockFormat == 1) {
+      hour = hour % 12;
+      if (hour == 0) hour = 12;
+    }
+    snprintf(hhmm, sizeof(hhmm), "%02u:%02u", hour, static_cast<unsigned>(when.tm_min));
+    snprintf(date, sizeof(date), "%02u/%02u/%04d", static_cast<unsigned>(when.tm_mday),
+             static_cast<unsigned>(when.tm_mon + 1), when.tm_year + 1900);
+  }
+
+  // Seeds are a few hundred bytes; keep the allocation fallible like the
+  // standby face does rather than parking them on the sleep path's stack.
+  const int sideMargin = pageWidth / 10;
+  const int clockHeight = pageHeight / 4;
+  const int clockTop = pageHeight / 4 - clockHeight / 2;
+  auto seeds = makeUniqueNoThrow<sloppy::Seeds>();
+  if (seeds) {
+    sloppy::prepareSeeds(/*seed=*/1u, kClockStyle, *seeds);
+    sloppy::draw(renderer, kClockStyle, *seeds, hhmm,
+                 sloppy::Bounds{sideMargin, clockTop, pageWidth - 2 * sideMargin, clockHeight});
+  } else {
+    renderer.drawCenteredText(NOTOSANS_18_FONT_ID, clockTop + clockHeight / 2, hhmm, true, EpdFontFamily::BOLD);
+  }
+
+  int y = clockTop + clockHeight + renderer.getLineHeight(UI_12_FONT_ID);
+  if (date[0] != '\0') {
+    renderer.drawCenteredText(UI_12_FONT_ID, y, date);
+    y += renderer.getLineHeight(UI_12_FONT_ID) * 2;
+  }
+
+  // The point of this screen: whoever finds the reader can give it back.
+  if (SETTINGS.ownerName[0] != '\0') {
+    renderer.drawCenteredText(NOTOSANS_16_FONT_ID, y, SETTINGS.ownerName, true, EpdFontFamily::BOLD);
+    y += renderer.getLineHeight(NOTOSANS_16_FONT_ID) + 8;
+  }
+  if (SETTINGS.ownerPhone[0] != '\0') {
+    renderer.drawCenteredText(NOTOSANS_16_FONT_ID, y, SETTINGS.ownerPhone);
+  }
+
+  renderer.displayBuffer(HalDisplay::HALF_REFRESH);
 }
 
 void SleepActivity::renderBlankSleepScreen() const {

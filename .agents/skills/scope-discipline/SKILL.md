@@ -1,11 +1,11 @@
 ---
 name: scope-discipline
-description: Evaluate CrossMux feature scope and resource tradeoffs when adding an activity, app, service, setting, library, or dependency. Reading is the core; lightweight e-ink extensions are allowed subject to RAM, Flash, power, and maintenance costs.
+description: Evaluate CrossMax feature scope and resource tradeoffs when adding an activity, app, service, setting, library, or dependency. Reading is the core; lightweight e-ink extensions are allowed subject to RAM, Flash, power, and maintenance costs.
 ---
 
 # Scope Discipline
 
-[SCOPE.md](../../../SCOPE.md) is the source of truth. CrossMux includes
+[SCOPE.md](../../../SCOPE.md) is the source of truth. CrossMax includes
 lightweight games and tools, reading analytics, standby customization, and
 on-demand services alongside the reader. Do not apply an upstream blanket ban
 on apps, themes, or network connectors to this fork.
@@ -41,7 +41,7 @@ not assumed to be permanently allocated.
 
 ## Self-review
 
-- [ ] The use case fits CrossMux's reading core or lightweight extensions.
+- [ ] The use case fits CrossMax's reading core or lightweight extensions.
 - [ ] Existing mechanisms were checked before adding surface.
 - [ ] RAM, largest-block, Flash, power, and maintenance costs are explained.
 - [ ] Resources and tasks have explicit lifetimes and failure cleanup.

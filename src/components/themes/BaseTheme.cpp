@@ -26,7 +26,7 @@
 #include "components/icons/customListIcons.h"
 #include "components/icons/headerIcons.h"
 #include "components/icons/listIcons.h"
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
 #include "components/icons/uiChromeIcons.h"
 #endif
 #include "fontIds.h"
@@ -85,7 +85,7 @@ constexpr int bookmarkStatusIconTopCrop = 2;
 constexpr int bluetoothStatusIconWidth = UiHighDpiProfile::enabled ? UiHighDpiProfile::readerStatusIconSize : 16;
 constexpr int bluetoothStatusIconHeight = UiHighDpiProfile::enabled ? UiHighDpiProfile::readerStatusIconSize : 16;
 
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
 // Plot only ink pixels; the white bits are transparent. No render-time buffers.
 void drawTransparentBitmap(const GfxRenderer& renderer, const freeink::Icon& icon, const int x, const int y,
                            const bool black) {
@@ -100,7 +100,7 @@ void drawTransparentBitmap(const GfxRenderer& renderer, const freeink::Icon& ico
 #endif
 
 void drawBookmarkStatusIcon(const GfxRenderer& renderer, const int x, const int y) {
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
   drawTransparentBitmap(renderer, icon_reader_bookmark_24, x, y, true);
 #else
   constexpr int bytesPerRow = bookmarkStatusIconWidth / 8;
@@ -115,7 +115,7 @@ void drawBookmarkStatusIcon(const GfxRenderer& renderer, const int x, const int 
 }
 
 void drawBluetoothStatusIcon(const GfxRenderer& renderer, const int x, const int y) {
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
   drawTransparentBitmap(renderer, icon_reader_bluetooth_24, x, y, true);
 #else
   constexpr int bytesPerRow = bluetoothStatusIconWidth / 8;
@@ -131,7 +131,7 @@ void drawBluetoothStatusIcon(const GfxRenderer& renderer, const int x, const int
 }  // namespace
 
 void BaseTheme::drawBatteryOutline(const GfxRenderer& renderer, int x, int y, int battWidth, int rectHeight) {
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
   if (battWidth == UiHighDpiProfile::batteryWidth && rectHeight == UiHighDpiProfile::batteryHeight) {
     drawTransparentBitmap(renderer, icon_battery_32x20, x, y, true);
     return;
@@ -173,7 +173,7 @@ void BaseTheme::drawBatteryLightningBolt(const GfxRenderer& renderer, int boltX,
 
 void BaseTheme::fillBatteryIcon(const GfxRenderer& renderer, Rect rect, uint16_t percentage) const {
   const bool charging = gpio.isUsbConnected();
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
   if (rect.width == UiHighDpiProfile::batteryWidth && rect.height == UiHighDpiProfile::batteryHeight) {
     constexpr int cavityWidth = 17;
     const int filledWidth = std::max(charging ? 14 : 0, std::min<int>(percentage, 100) * cavityWidth / 100);

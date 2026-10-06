@@ -344,8 +344,8 @@ def build_bundled(source_dir: Path, output_dir: Path, header_path: Path):
     total = 0
     ns = {'x': 'http://www.w3.org/1999/xhtml'}
     for language, symbol, filename in (
-        ('zh-CN', 'Chinese', 'CrossMux用户手册.epub'),
-        ('en', 'English', 'CrossMux User Guide.epub'),
+        ('zh-CN', 'Chinese', 'CrossMax用户手册.epub'),
+        ('en', 'English', 'CrossMax User Guide.epub'),
     ):
         source = (source_dir / f'{language}.xhtml').read_text(encoding='utf-8')
         root = ET.fromstring(source)
@@ -380,9 +380,9 @@ def build_bundled(source_dir: Path, output_dir: Path, header_path: Path):
             '<?xml version="1.0" encoding="utf-8"?>'
             '<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="book-id">'
             '<metadata xmlns:dc="http://purl.org/dc/elements/1.1/">'
-            f'<dc:identifier id="book-id">crossmux-user-guide-{language}</dc:identifier>'
+            f'<dc:identifier id="book-id">crossmax-user-guide-{language}</dc:identifier>'
             f'<dc:title>{escaped_title}</dc:title><dc:language>{language}</dc:language>'
-            '<dc:creator>CrossMux</dc:creator><meta property="dcterms:modified">2026-01-01T00:00:00Z</meta>'
+            '<dc:creator>CrossMax</dc:creator><meta property="dcterms:modified">2026-01-01T00:00:00Z</meta>'
             '</metadata><manifest>'
             '<item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>'
             '<item id="style" href="style.css" media-type="text/css"/>'

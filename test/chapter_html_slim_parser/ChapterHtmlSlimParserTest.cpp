@@ -93,7 +93,7 @@ class ChapterHtmlSlimParserTest : public ::testing::TestWithParam<const char*> {
     if (filepath != "unused.xhtml") std::filesystem::remove(filepath);
   }
   void writeHtml(const std::string& html) {
-    filepath = (std::filesystem::temp_directory_path() / ("crossmux-parser-oom-" + std::to_string(getpid()) + ".xhtml"))
+    filepath = (std::filesystem::temp_directory_path() / ("crossmax-parser-oom-" + std::to_string(getpid()) + ".xhtml"))
                    .string();
     std::ofstream(filepath) << html;
   }
@@ -339,7 +339,7 @@ class SectionMemoryTest : public ::testing::Test {
     ESP = {};
     // CTest launches each case in a separate process when running in parallel.
     epub->cachePath =
-        (std::filesystem::temp_directory_path() / ("crossmux-section-memory-test-" + std::to_string(getpid())))
+        (std::filesystem::temp_directory_path() / ("crossmax-section-memory-test-" + std::to_string(getpid())))
             .string();
     std::filesystem::remove_all(epub->cachePath);
     std::filesystem::create_directories(epub->cachePath + "/html");

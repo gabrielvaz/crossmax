@@ -1,6 +1,6 @@
 # FreeInk SDK synchronization — September 2026
 
-This integration preserves CrossMux's device support and UI extensions while
+This integration preserves CrossMax's device support and UI extensions while
 bringing the SDK fork through upstream `14028b179cc5a85a7a4cf0ccb33980dce8737735`.
 The `freeink-sdk` gitlink is the authoritative fork revision; the SDK review is
 [freeink-sdk#24](https://github.com/0x1abin/freeink-sdk/pull/24). The simulator
@@ -53,14 +53,14 @@ Tab measurement checks also cover content-width and equal-width layouts.
 
 Final publication passed builds for `default`, `gh_release`, `x4c`, `eego_a4`,
 `murphy_m4`, `waveshare_epaper_397`, and `sticky`. SDK integration also runs the
-normal CrossMux CI, including the X4/X4 Pro build and hardware/simulator matrix.
+normal CrossMax CI, including the X4/X4 Pro build and hardware/simulator matrix.
 A successful build is not a hardware acceptance result.
 
 The user confirmed the three Sticky menu gestures above and reported normal
-X4 validation after testing the candidate. Those hardware runs used CrossMux
+X4 validation after testing the candidate. Those hardware runs used CrossMax
 `c2fb3467c39a3e067fe4e41303fa4226e40e986a` and SDK candidate tree
 `0eb44b2461b3112c8bdc94035b1aa1cd1e4de86a`; the final review additionally reuses
-tab metrics and integrates the current CrossMux base. These later changes are
+tab metrics and integrates the current CrossMax base. These later changes are
 covered by host/build checks, not a claim of another hardware run.
 
 UC8279 physical waveform quality, Home/screen overlap timing, SD long-transfer

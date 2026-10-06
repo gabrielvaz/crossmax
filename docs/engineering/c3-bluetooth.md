@@ -135,7 +135,7 @@ validation. Download interruptions were resolved without source changes.
 | `papermono-gh_release` | 115,924 B | 85,760 B | 5,913,842 B | 5,914,352 B | `0ecddf432350` |
 
 Full hashes, ELF/map files, actual configuration headers and logs are local under
-`/private/tmp/crossmux-ble-all-builds/`. These images have not been flashed; the
+`/private/tmp/crossmax-ble-all-builds/`. These images have not been flashed; the
 hardware evidence and remaining acceptance matrix below remain separate.
 
 ### Earlier review and device evidence
@@ -167,7 +167,7 @@ this is not a runtime fragmentation improvement. Artifact SHA256 values:
 - `murphy_m4`: `2cd5ddcd2904a3e6ae2c1f8967e71cd4306a2dbede8b09ca0384ebd854f02301`
 - `c3_ble_probe`: `7af885a132edbe3cb96f6e57bbfe00196789e934d599faa3a4436c1e27bd7116`
 
-Review artifacts are local under `/private/tmp/crossmux-c3-review/`. The C3
+Review artifacts are local under `/private/tmp/crossmax-c3-review/`. The C3
 application checksum/hash passes `esptool image-info`; it has **not been flashed**.
 SDK startup/scan ownership changes were merged in
 [FreeInk SDK PR #23](https://github.com/0x1abin/freeink-sdk/pull/23). The gitlink
@@ -202,7 +202,7 @@ The review removes temporary heap walking and allocation-address tracing from
 the application and the SDK, including BLE-specific dependencies in HTTP/font
 network paths. Keep ordinary error codes and lifecycle free/min/largest/stack
 logs. Historical raw logs/images remain local under
-`/private/tmp/crossmux-c3-coexist/`; they are not repository assets. A refactored
+`/private/tmp/crossmax-c3-coexist/`; they are not repository assets. A refactored
 image requires its own hardware check and must not inherit an earlier hash's
 flash verification.
 

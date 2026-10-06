@@ -21,7 +21,7 @@
 #include "components/SubpageLayout.h"
 #include "components/UITheme.h"
 #include "fontIds.h"
-#include "network/CrossMuxEndpoints.h"
+#include "network/CrossMaxEndpoints.h"
 #include "network/HttpDownloader.h"
 
 namespace fui = freeink::ui;
@@ -47,7 +47,7 @@ bool hasSuffix(const std::string& value, const char* suffix) {
 int readMarkerRevision(const char* directory) {
   char markerPath[112];
   char markerData[32];
-  snprintf(markerPath, sizeof(markerPath), "%s/.crossmux-resource", directory);
+  snprintf(markerPath, sizeof(markerPath), "%s/.crossmax-resource", directory);
   return DictionaryResource::parseMarkerRevision(
       Storage.readFileToBuffer(markerPath, markerData, sizeof(markerData)) > 0 ? markerData : nullptr);
 }
@@ -125,8 +125,8 @@ bool DictionaryDownloadActivity::fetchAndParseManifest() {
   downloadingIndex_ = -1;
   char manifestUrl[192];
   const int manifestUrlLength =
-      snprintf(manifestUrl, sizeof(manifestUrl), CrossMuxEndpoints::DICTIONARY_MANIFEST_FORMAT,
-               CrossMuxEndpoints::host(), LANGUAGE_CODES[static_cast<uint8_t>(I18N.getLanguage())]);
+      snprintf(manifestUrl, sizeof(manifestUrl), CrossMaxEndpoints::DICTIONARY_MANIFEST_FORMAT,
+               CrossMaxEndpoints::host(), LANGUAGE_CODES[static_cast<uint8_t>(I18N.getLanguage())]);
   if (manifestUrlLength < 0 || static_cast<size_t>(manifestUrlLength) >= sizeof(manifestUrl)) {
     LOG_ERR("DICTDL", "Manifest URL exceeds %zu bytes", sizeof(manifestUrl));
     return false;
@@ -316,7 +316,7 @@ bool DictionaryDownloadActivity::ifoUses64BitOffsets(const char* path) {
 bool DictionaryDownloadActivity::writeMarker(const char* stagePath, const int revision) {
   char path[112];
   char contents[24];
-  snprintf(path, sizeof(path), "%s/.crossmux-resource", stagePath);
+  snprintf(path, sizeof(path), "%s/.crossmax-resource", stagePath);
   const int length = snprintf(contents, sizeof(contents), "1:%d\n", revision);
   HalFile marker;
   return Storage.openFileForWrite("DICTDL", path, marker) &&

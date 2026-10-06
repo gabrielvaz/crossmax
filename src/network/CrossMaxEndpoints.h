@@ -2,7 +2,7 @@
 
 #include "CrossPointSettings.h"
 
-namespace CrossMuxEndpoints {
+namespace CrossMaxEndpoints {
 
 inline constexpr char GLOBAL_HOST[] = "crossmux.com";
 inline constexpr char CHINA_HOST[] = "crossmux.cn";
@@ -37,4 +37,4 @@ inline const char* otaVariant() { return otaVariantFor(SETTINGS.contentProfile);
 static_assert(hostFor(CrossPointSettings::ContentProfile::China) == CHINA_HOST);
 static_assert(hostFor(CrossPointSettings::ContentProfile::Global) == GLOBAL_HOST);
 
-}  // namespace CrossMuxEndpoints
+}  // namespace CrossMaxEndpoints

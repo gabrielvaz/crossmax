@@ -101,7 +101,7 @@ with tempfile.TemporaryDirectory(prefix='touch-network-') as directory:
         source=directory/'popup.cpp';source.write_text(code)
         binary=directory/'popup'
         command=['c++','-std=c++20','-I'+str(ROOT/'src'),'-I'+str(ROOT/'freeink-sdk/libs/ui/FreeInkUI/include'),str(source),'-o',str(binary)]
-        if high:command.insert(2,'-DCROSSMUX_UI_PROFILE_HIGH_DPI=1')
+        if high:command.insert(2,'-DCROSSMAX_UI_PROFILE_HIGH_DPI=1')
         subprocess.run(command,check=True);subprocess.run([str(binary)],check=True)
 
 wifi=(ROOT/'src/activities/network/WifiSelectionActivity.cpp').read_text()

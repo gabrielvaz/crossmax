@@ -189,10 +189,10 @@ TEST(PixelSwitchState, ValidatesTopicAndPayloadLength) {
   EXPECT_TRUE(pixel_switch::importCanvasMessage(state, pixel_switch::MQTT_TOPIC, snapshot.data(), snapshot.size()));
   EXPECT_EQ(state.bytes(), snapshot);
   EXPECT_FALSE(pixel_switch::isValidCanvasMessage(nullptr, PixelSwitchState::BYTE_COUNT));
-  EXPECT_FALSE(pixel_switch::isValidCanvasMessage("crossmux/pixel-switch/v1/other", PixelSwitchState::BYTE_COUNT));
+  EXPECT_FALSE(pixel_switch::isValidCanvasMessage("crossmax/pixel-switch/v1/other", PixelSwitchState::BYTE_COUNT));
   EXPECT_FALSE(pixel_switch::isValidCanvasMessage(pixel_switch::MQTT_TOPIC, PixelSwitchState::BYTE_COUNT - 1));
 
-  EXPECT_FALSE(pixel_switch::importCanvasMessage(state, "crossmux/pixel-switch/v1/other", nullptr, snapshot.size()));
+  EXPECT_FALSE(pixel_switch::importCanvasMessage(state, "crossmax/pixel-switch/v1/other", nullptr, snapshot.size()));
   EXPECT_FALSE(
       pixel_switch::importCanvasMessage(state, pixel_switch::MQTT_TOPIC, snapshot.data(), snapshot.size() - 1));
   EXPECT_EQ(state.bytes(), snapshot);

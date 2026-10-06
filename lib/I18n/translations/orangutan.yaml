@@ -3,7 +3,7 @@ _language_code: "OOK"
 _order: "34"
 _bcp47: "ook"
 
-STR_CROSSPOINT: "CrossMux"
+STR_CROSSPOINT: "CrossMax"
 STR_BOOTING: "OOK"
 STR_SLEEPING: "Oooook"
 STR_ENTERING_SLEEP: "Ook..."

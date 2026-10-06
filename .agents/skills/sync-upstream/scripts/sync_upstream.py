@@ -321,7 +321,7 @@ def next_component(statuses: dict[str, DependencyStatus]) -> str:
     for name in ("sdk", "simulator"):
         if statuses[name].action != "up-to-date":
             return name
-    return "crossmux"
+    return "crossmax"
 
 
 def sync_pr_open(root: Path, dependency: Dependency, parent_sha: str) -> bool:
@@ -400,7 +400,7 @@ def candidate_path(
     base = (
         Path(override)
         if override
-        else Path(tempfile.gettempdir()) / "crossmux-sync-upstream"
+        else Path(tempfile.gettempdir()) / "crossmax-sync-upstream"
     )
     return base / f"{component}-{upstream_sha[:8]}"
 
@@ -434,7 +434,7 @@ def candidate_id(component: str, base_sha: str, upstream_sha: str) -> str:
 def branch_name(component: str, upstream_sha: str) -> str:
     prefix = (
         DEFAULT_BRANCH_PREFIX
-        if component == "crossmux"
+        if component == "crossmax"
         else DEPENDENCIES[component].branch_prefix
     )
     return f"{prefix}-{upstream_sha[:8]}"
@@ -496,7 +496,7 @@ def clone_dependency_candidate(
     return state
 
 
-def clone_crossmux_candidate(
+def clone_crossmax_candidate(
     ctx: Context,
     statuses: dict[str, DependencyStatus],
     candidate: Path,
@@ -514,7 +514,7 @@ def clone_crossmux_candidate(
     fetch_branch(candidate, "upstream", ctx.upstream_branch)
     base_ref = full_sha(ctx.root, "HEAD") if local_rehearsal else f"refs/remotes/origin/{ctx.base_branch}"
     base_sha = full_sha(candidate, base_ref)
-    branch = branch_name("crossmux", upstream_sha)
+    branch = branch_name("crossmax", upstream_sha)
     git(candidate, "switch", "-C", branch, base_ref)
     overlaps = sorted(
         set(overlap_paths(candidate, base_ref, upstream_sha)) | set(behavior_overlaps)
@@ -525,15 +525,15 @@ def clone_crossmux_candidate(
         f"chore: sync upstream {ctx.upstream_branch} into {ctx.base_branch} ({upstream_sha[:8]})",
     )
     if not conflicts and not local_rehearsal:
-        update_crossmux_dependency_pins(
+        update_crossmax_dependency_pins(
             candidate, statuses["sdk"].fork_sha, statuses["simulator"].fork_sha
         )
     state: dict[str, object] = {
         "base_branch": ctx.base_branch,
         "base_sha": base_sha,
         "branch": branch,
-        "candidate_id": candidate_id("crossmux", base_sha, upstream_sha),
-        "component": "crossmux",
+        "candidate_id": candidate_id("crossmax", base_sha, upstream_sha),
+        "component": "crossmax",
         "conflict_paths": conflicts,
         "overlap_paths": overlaps,
         "review_items": sorted(set(conflicts) | set(overlaps)),
@@ -557,7 +557,7 @@ def replace_simulator_pins(platformio: str, cmake: str, sha: str) -> tuple[str, 
     return platformio, cmake
 
 
-def update_crossmux_dependency_pins(
+def update_crossmax_dependency_pins(
     root: Path, sdk_sha: str, simulator_sha: str
 ) -> None:
     git(
@@ -644,7 +644,7 @@ def simulator_pins(text: str) -> tuple[str, ...]:
     return tuple(match.group(1) for match in (platform, cmake) if match)
 
 
-def inspect_crossmux(
+def inspect_crossmax(
     ctx: Context,
     statuses: dict[str, DependencyStatus],
     upstream_pin: str | None = None,
@@ -653,7 +653,7 @@ def inspect_crossmux(
     fetch_branch(ctx.root, ctx.upstream_remote, ctx.upstream_branch)
     base_sha = full_sha(ctx.root, ctx.origin_base_ref)
     upstream_sha, latest_upstream_sha = select_upstream_sha(
-        ctx.root, ctx.upstream_ref, upstream_pin, "crossmux"
+        ctx.root, ctx.upstream_ref, upstream_pin, "crossmax"
     )
     platformio = git_output(ctx.root, "show", f"{ctx.origin_base_ref}:platformio.ini")
     cmake = git_output(ctx.root, "show", f"{ctx.origin_base_ref}:test/CMakeLists.txt")
@@ -707,7 +707,7 @@ def validate_index(root: Path) -> None:
     check_conflict_markers(root)
 
 
-def run_crossmux_builds(
+def run_crossmax_builds(
     root: Path, skip_builds: bool, extra_envs: Sequence[str]
 ) -> None:
     if skip_builds:
@@ -720,24 +720,24 @@ def run_crossmux_builds(
 
 
 def validate_sdk_candidate(
-    candidate: Path, crossmux_root: Path, skip_builds: bool, extra_envs: Sequence[str]
+    candidate: Path, crossmax_root: Path, skip_builds: bool, extra_envs: Sequence[str]
 ) -> None:
     for script in SDK_HOST_TESTS:
         run(["bash", script], cwd=candidate, capture=False)
     if skip_builds:
         print(
-            "Skipping CrossMux SDK candidate builds because --skip-builds was passed."
+            "Skipping CrossMax SDK candidate builds because --skip-builds was passed."
         )
         return
-    with tempfile.TemporaryDirectory(prefix="crossmux-sdk-check-") as temp_dir:
-        checkout = Path(temp_dir) / "crossmux"
-        run(["git", "clone", str(crossmux_root), str(checkout)], cwd=crossmux_root)
+    with tempfile.TemporaryDirectory(prefix="crossmax-sdk-check-") as temp_dir:
+        checkout = Path(temp_dir) / "crossmax"
+        run(["git", "clone", str(crossmax_root), str(checkout)], cwd=crossmax_root)
         if (checkout / "freeink-sdk").exists():
             shutil.rmtree(checkout / "freeink-sdk")
         # Materialize the reviewed index: symlinks break PlatformIO's path matching,
         # and copying the worktree would also include unreviewed debug/build files.
         git(candidate, "checkout-index", "--all", f"--prefix={checkout / 'freeink-sdk'}/")
-        run_crossmux_builds(checkout, False, extra_envs)
+        run_crossmax_builds(checkout, False, extra_envs)
 
 
 def replace_simulator_with_local_candidate(platformio: str, candidate: Path) -> str:
@@ -768,19 +768,19 @@ def replace_cmake_simulator_with_local_candidate(cmake: str, candidate: Path) ->
 
 
 def validate_simulator_candidate(
-    candidate: Path, crossmux_root: Path, skip_builds: bool
+    candidate: Path, crossmax_root: Path, skip_builds: bool
 ) -> None:
     run(["bash", "tests/run_host_compat_self_test.sh"], cwd=candidate, capture=False)
     if skip_builds:
         print(
-            "Skipping CrossMux simulator candidate builds because --skip-builds was passed."
+            "Skipping CrossMax simulator candidate builds because --skip-builds was passed."
         )
         return
-    with tempfile.TemporaryDirectory(prefix="crossmux-simulator-check-") as temp_dir:
-        checkout = Path(temp_dir) / "crossmux"
+    with tempfile.TemporaryDirectory(prefix="crossmax-simulator-check-") as temp_dir:
+        checkout = Path(temp_dir) / "crossmax"
         run(
-            ["git", "clone", "--recurse-submodules", str(crossmux_root), str(checkout)],
-            cwd=crossmux_root,
+            ["git", "clone", "--recurse-submodules", str(crossmax_root), str(checkout)],
+            cwd=crossmax_root,
         )
         platform_path = checkout / "platformio.ini"
         cmake_path = checkout / "test/CMakeLists.txt"
@@ -817,7 +817,7 @@ def commit_candidate(candidate: Path, state: dict[str, object]) -> None:
         return
     component = str(state["component"])
     upstream_sha = str(state["upstream_sha"])
-    if component == "crossmux":
+    if component == "crossmax":
         title = f"chore: sync upstream into {state['base_branch']} ({upstream_sha[:8]})"
     else:
         title = f"chore: sync {component} upstream main ({upstream_sha[:8]})"
@@ -870,7 +870,7 @@ def push_and_create_pr(
     component = str(state["component"])
     repo = (
         "0x1abin/crossmux"
-        if component == "crossmux"
+        if component == "crossmax"
         else DEPENDENCIES[component].fork_repo
     )
     branch = str(state["branch"])
@@ -885,7 +885,7 @@ def push_and_create_pr(
         return
     title = (
         f"chore: sync upstream into {state['base_branch']} ({str(state['upstream_sha'])[:8]})"
-        if component == "crossmux"
+        if component == "crossmax"
         else f"chore: sync {component} upstream main ({str(state['upstream_sha'])[:8]})"
     )
     body = pr_body(state, review_notes, skipped_builds)
@@ -917,7 +917,7 @@ def push_and_create_pr(
 
 
 def parse_upstream_pin(value: str) -> tuple[str, str]:
-    match = re.fullmatch(r"(sdk|simulator|crossmux)=([0-9a-f]{40})", value)
+    match = re.fullmatch(r"(sdk|simulator|crossmax)=([0-9a-f]{40})", value)
     if not match:
         raise argparse.ArgumentTypeError(
             "upstream pin must be COMPONENT=40_HEX_SHA"
@@ -938,9 +938,9 @@ def cmd_inspect(args: argparse.Namespace) -> int:
     ctx = build_context(args)
     pins = upstream_pins(args)
     statuses = inspect_dependencies(ctx.root, upstream_pins=pins)
-    crossmux = inspect_crossmux(ctx, statuses, pins.get("crossmux"))
+    crossmax = inspect_crossmax(ctx, statuses, pins.get("crossmax"))
     summary = {
-        "crossmux": crossmux,
+        "crossmax": crossmax,
         "dependencies": {
             name: {
                 "action": status.action,
@@ -1004,7 +1004,7 @@ def cmd_start(args: argparse.Namespace) -> int:
     rehearsal = getattr(args, "local_rehearsal", False)
     dependencies = {}
     if rehearsal:
-        for name in ("sdk", "simulator", "crossmux"):
+        for name in ("sdk", "simulator", "crossmax"):
             if name == args.component:
                 break
             dependency = candidate_path(name, statuses[name].parent_sha, args.candidate_root).resolve()
@@ -1014,11 +1014,11 @@ def cmd_start(args: argparse.Namespace) -> int:
         raise RuntimeError(
             f"Next component is {expected!r}; refusing to start {args.component!r}."
         )
-    if args.component == "crossmux":
-        crossmux_status = inspect_crossmux(ctx, statuses, pins.get("crossmux"))
-        if crossmux_status["action"] == "up-to-date":
-            raise RuntimeError("crossmux is already up to date.")
-        upstream_sha = str(crossmux_status["upstream_sha"])
+    if args.component == "crossmax":
+        crossmax_status = inspect_crossmax(ctx, statuses, pins.get("crossmax"))
+        if crossmax_status["action"] == "up-to-date":
+            raise RuntimeError("crossmax is already up to date.")
+        upstream_sha = str(crossmax_status["upstream_sha"])
     else:
         status = statuses[args.component]
         if not rehearsal and status.action != "sync-required":
@@ -1042,8 +1042,8 @@ def cmd_start(args: argparse.Namespace) -> int:
         state["review_items"] = sorted(set(recorded_items) | set(args.behavior_overlap))
         if state["review_items"] != recorded_items:
             state.pop("reviewed_tree", None)
-        if args.component == "crossmux" and not rehearsal and not state["conflict_paths"]:
-            update_crossmux_dependency_pins(
+        if args.component == "crossmax" and not rehearsal and not state["conflict_paths"]:
+            update_crossmax_dependency_pins(
                 candidate, statuses["sdk"].fork_sha, statuses["simulator"].fork_sha
             )
             state["sdk_sha"] = statuses["sdk"].fork_sha
@@ -1053,8 +1053,8 @@ def cmd_start(args: argparse.Namespace) -> int:
         write_state(candidate, state)
         summarize_state(candidate, state)
         return 0
-    if args.component == "crossmux":
-        state = clone_crossmux_candidate(
+    if args.component == "crossmax":
+        state = clone_crossmax_candidate(
             ctx, statuses, candidate, args.behavior_overlap, upstream_sha,
             **({"local_rehearsal": True} if rehearsal else {}),
         )
@@ -1125,30 +1125,30 @@ def cmd_publish(args: argparse.Namespace) -> int:
     else:
         ctx = build_context(args)
         statuses = inspect_dependencies(root, upstream_pins=pins)
-        current_crossmux = inspect_crossmux(ctx, statuses, pins.get("crossmux"))
+        current_crossmax = inspect_crossmax(ctx, statuses, pins.get("crossmax"))
         if (
-            current_crossmux["base_sha"] != state["base_sha"]
-            or current_crossmux["upstream_sha"] != state["upstream_sha"]
+            current_crossmax["base_sha"] != state["base_sha"]
+            or current_crossmax["upstream_sha"] != state["upstream_sha"]
         ):
             raise RuntimeError(
-                "CrossMux base or upstream moved after start; inspect and start a fresh candidate."
+                "CrossMax base or upstream moved after start; inspect and start a fresh candidate."
             )
         if any(status.action != "up-to-date" for status in statuses.values()):
             raise RuntimeError(
-                "A dependency fork is no longer up to date; publish it before CrossMux."
+                "A dependency fork is no longer up to date; publish it before CrossMax."
             )
         if (
             statuses["sdk"].fork_sha != state["sdk_sha"]
             or statuses["simulator"].fork_sha != state["simulator_sha"]
         ):
             raise RuntimeError(
-                "A dependency fork moved after start; rerun CrossMux start to refresh both pins."
+                "A dependency fork moved after start; rerun CrossMax start to refresh both pins."
             )
         expected_sdk = str(state["sdk_sha"])
         expected_simulator = str(state["simulator_sha"])
         if indexed_gitlink_sha(candidate) != expected_sdk:
             raise RuntimeError(
-                "CrossMux candidate does not pin the reviewed SDK revision; rerun start."
+                "CrossMax candidate does not pin the reviewed SDK revision; rerun start."
             )
         pins = simulator_pins(
             (candidate / "platformio.ini").read_text(encoding="utf-8")
@@ -1157,9 +1157,9 @@ def cmd_publish(args: argparse.Namespace) -> int:
         )
         if len(pins) != 2 or any(pin != expected_simulator for pin in pins):
             raise RuntimeError(
-                "CrossMux candidate does not pin one reviewed simulator revision; rerun start."
+                "CrossMax candidate does not pin one reviewed simulator revision; rerun start."
             )
-        run_crossmux_builds(candidate, args.skip_builds, args.extra_build_env)
+        run_crossmax_builds(candidate, args.skip_builds, args.extra_build_env)
     commit_candidate(candidate, state)
     push_and_create_pr(candidate, state, args.review_note, args.skip_builds)
     return 0
@@ -1176,7 +1176,7 @@ def add_common_options(parser: argparse.ArgumentParser) -> None:
         default=[],
         type=parse_upstream_pin,
         metavar="COMPONENT=SHA",
-        help="freeze sdk, simulator, or crossmux at an upstream commit; repeatable",
+        help="freeze sdk, simulator, or crossmax at an upstream commit; repeatable",
     )
 
 
@@ -1195,7 +1195,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     )
     add_common_options(start_parser)
     start_parser.add_argument(
-        "--component", choices=("sdk", "simulator", "crossmux"), required=True
+        "--component", choices=("sdk", "simulator", "crossmax"), required=True
     )
     start_parser.add_argument(
         "--candidate-root", help="override the temporary candidate parent directory"
@@ -1217,7 +1217,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     )
     add_common_options(publish_parser)
     publish_parser.add_argument(
-        "--component", choices=("sdk", "simulator", "crossmux"), required=True
+        "--component", choices=("sdk", "simulator", "crossmax"), required=True
     )
     publish_parser.add_argument(
         "--candidate", required=True, help="candidate path printed by start"

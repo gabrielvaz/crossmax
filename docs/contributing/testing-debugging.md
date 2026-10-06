@@ -1,6 +1,6 @@
 # Testing and Debugging
 
-CrossMux runs on real hardware, so debugging usually combines local build checks and on-device logs.
+CrossMax runs on real hardware, so debugging usually combines local build checks and on-device logs.
 
 ## Local checks
 

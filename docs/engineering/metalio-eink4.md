@@ -3,7 +3,7 @@
 Independent ESP32-S3 firmware target, model/board tag `metalio_eink4`, public
 Nightly slug `metalio-eink4`. Hardware reference: `metalio-hw-test` 2.0.51,
 `main/hal/metalio-e-ink-4/config.h`, `IOExpander.hpp`, and its SSD1677 driver.
-The port was developed on SDK `5faf69e8` and rebased onto the current CrossMux
+The port was developed on SDK `5faf69e8` and rebased onto the current CrossMax
 SDK dependency, including its SD-capacity fix; it does not migrate the reference's
 ESP-IDF/LVGL application or add its audio, cellular or IMU features. Global touch
 haptic feedback is supported as described below.
@@ -19,7 +19,7 @@ python3 freeink-sdk/libs/hardware/BoardConfig/test/host/test_metalio_charger.py
 
 The target uses the existing 16 MiB flash dual-OTA partition layout and the
 prebuilt S3 TinyUSB core with octal PSRAM. Actual PSRAM capacity is detected at
-boot. First installation must include CrossMux's bootloader/partition table;
+boot. First installation must include CrossMax's bootloader/partition table;
 do not place only the OTA application into the hardware-test firmware's layout.
 The Nightly full-install manifest supplies the matching offsets and files.
 Both legacy flavor manifests point to the same unified firmware. Tagged images
@@ -258,7 +258,7 @@ acceptance must each be recorded independently.
   with no production-source string extraction. Trace coverage includes both
   failed black-pulse phases, failed analog park, deferred completion, explicit
   FULL and leaving reading without another gray overlay.
-- Rebased onto CrossMux main `fd4a74af` and its SDK dependency `8242f43`, which
+- Rebased onto CrossMax main `fd4a74af` and its SDK dependency `8242f43`, which
   includes the existing SD-capacity repair (SDK PR #25). That dependency must
   land before the Metalio SDK PR; the firmware PR pins the pushed SDK revision.
 - Local Python checks: 53 passed. SDK input checks: 24 passed, plus the touch
@@ -302,23 +302,23 @@ Reference: `/home/zzb/workspace/ink/Metalio-E-INK4`, particularly
 `main/boards/metalio-e-ink-4/config.h`, `metalio_e_ink_4_board.cc`,
 `metalio_touch.c` and `main/boards/common/IOExpander.hpp`.
 These are software wiring evidence, not a new schematic or physical acceptance.
-Workspace bases: CrossMux `d0889e7224c0`, SDK `e8e0276d0609`, plus local
+Workspace bases: CrossMax `d0889e7224c0`, SDK `e8e0276d0609`, plus local
 uncommitted changes; the SDK gitlink is unchanged.
 
 | Subsystem | Comparison and decision |
 |---|---|
 | SoC / storage | Retain independent S3 N16R8 target, existing dual-OTA layout, SDMMC CLK38/CMD40/D0=39 and input-only DAT3=46; do not copy the reference application partitions. |
-| Display | Panel, 800×480 geometry, SPI pins and 10 MHz agree. Retain the physically selected CrossMux SSD1677 cleaning policy and grayscale lifecycle. |
+| Display | Panel, 800×480 geometry, SPI pins and 10 MHz agree. Retain the physically selected CrossMax SSD1677 cleaning policy and grayscale lifecycle. |
 | Touch / keys | Native coordinates, three bezel locations, GPIO1 IRQ, expander key pins and 10/120 ms boot reset agree. Add `0xA5=0x03` before deep sleep; failures log and still allow shutdown. Reset on boot restores touch after deep-sleep wake. No new light-sleep policy. |
 | Power / expander | Keep safe latch preload and main/screen rail ordering; repeat 100 ms high/low shutdown pulses until power is cut, without an ESP deep-sleep fallback. Add P0.0 output HIGH for USB flash/debug routing, matching the reference FSUSB42UMX selection. |
 | Haptic | Reference GPIO44 active-high, 35 ms timer pulse. Use board-calibratable 20/35/60 ms feedback for the entire touch surface and capability-gated settings. |
 | Gauge / charger | BQ27220 at 0x55 and optional CX25601N at 0x6B agree. At this audit, charger control was intentionally deferred; the current boot-time configuration above supersedes that decision. |
 | RTC | Retain PCF8563 at 0x51 and system-UTC restore/writeback. |
-| Audio / microphone | Reference external BT audio module uses UART TX48/RX47 and I²S BCLK6/WS43/DOUT7/DIN17. CrossMux leaves audio/mic capabilities disabled and PA off; codec/module control needs a separate port. |
-| IMU | Reference SC7A20H at 0x19, interrupt on TCA9555 P1.4. CrossMux keeps IMU disabled; no substitute QMI8658 driver or automatic rotation is enabled. |
-| Cellular | Reference NT26 UART TX12/RX11, MRDY21/SRDY5. No CrossMux modem service is introduced. |
-| USB camera | Reference switches P0.0 LOW for camera host use. CrossMux keeps HIGH for existing native-USB debug/MSC; no UVC host driver. |
-| Wi-Fi / BLE | Retain existing CrossMux Wi-Fi and BLE page-turner paths, not the reference voice/network application. |
+| Audio / microphone | Reference external BT audio module uses UART TX48/RX47 and I²S BCLK6/WS43/DOUT7/DIN17. CrossMax leaves audio/mic capabilities disabled and PA off; codec/module control needs a separate port. |
+| IMU | Reference SC7A20H at 0x19, interrupt on TCA9555 P1.4. CrossMax keeps IMU disabled; no substitute QMI8658 driver or automatic rotation is enabled. |
+| Cellular | Reference NT26 UART TX12/RX11, MRDY21/SRDY5. No CrossMax modem service is introduced. |
+| USB camera | Reference switches P0.0 LOW for camera host use. CrossMax keeps HIGH for existing native-USB debug/MSC; no UVC host driver. |
+| Wi-Fi / BLE | Retain existing CrossMax Wi-Fi and BLE page-turner paths, not the reference voice/network application. |
 
 `FREEINK_CAP_HAPTIC` defaults to Metalio only and can be overridden with
 `-DFREEINK_CAP_HAPTIC=0`. Unsupported boards remain at zero; enabling it on a
@@ -407,14 +407,14 @@ The SDK changes were integrated through
 pins merged commit `094976e1d47ad7120cf461fec5f6b737eaabf13f`; its source tree
 `fa514adeac892085ec6205645c153b1f6dad4956` exactly matches tested feature commit
 `4512f1441e1ab54dea8d9889cc35e021991413c8`. No SDK source or build-relevant file
-changed during integration. [CrossMux PR #318](https://github.com/0x1abin/crossmux/pull/318)
+changed during integration. [CrossMax PR #318](https://github.com/0x1abin/crossmux/pull/318)
 contains the application/HAL changes. No application merge or firmware publication
 is part of this work.
 
 ## 2026-09-25 combined text AA recovery
 
 The identified ESP32-S3 unit (USB serial and MAC `10:20:ba:6e:08:70`) booted
-from CrossMux app0 at `0x10000`. Its earlier default-AA image entered the home
+from CrossMax app0 at `0x10000`. Its earlier default-AA image entered the home
 activity and logged completed refreshes, but the user reported that opening a
 book did not work. The shared display fix waits for an outstanding asynchronous
 refresh before routing and resets a sleeping SSD1677 before checking BUSY.

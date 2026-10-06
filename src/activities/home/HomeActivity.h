@@ -11,6 +11,7 @@
 #include "util/ButtonNavigator.h"
 
 struct Rect;
+struct ThemeMetrics;
 
 class HomeActivity final : public Activity {
   enum class CarouselUpdateScope { None, MenuOnly, Full };
@@ -26,6 +27,9 @@ class HomeActivity final : public Activity {
   // The home "library" slot (index 2) shows Plugins when any plugin is
   // installed, otherwise OPDS. The index converters gate on its presence.
   bool hasLibrarySlot() const { return hasPlugins || hasOpdsServers; }
+  // Lyra List splits the home header: a status band (clock, date, battery)
+  // above a greeting line, instead of one band shared with the title.
+  void drawStatusAndGreeting(int pageWidth, const ThemeMetrics& metrics);
   bool hasContinueReading = false;
   int lastCarouselBookIndex = 0;
   bool coverRendered = false;           // Track if cover has been rendered once

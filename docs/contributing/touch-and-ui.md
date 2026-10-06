@@ -1,10 +1,10 @@
 # Touch and UI Development
 
-CrossMux includes touch-capable ESP32-S3 targets alongside the button-only Xteink X3/X4. Every screen must work with both input styles; see [device variants](../engineering/device-variants.md) for the configured targets and their validation limits.
+CrossMax includes touch-capable ESP32-S3 targets alongside the button-only Xteink X3/X4. Every screen must work with both input styles; see [device variants](../engineering/device-variants.md) for the configured targets and their validation limits.
 
 **There is one supported way to build a new screen: FreeInkUI, hosted through the firmware base classes below.** Touch hit-testing, tap highlighting, long-press, swipe scrolling, and button focus navigation all come from the shared stack; you never hand-roll coordinate math.
 
-The old bridge helpers (`rowTouch`, `colTouch`, `wasTapInRect`, manual rect `contains()` checks) are a compatibility boundary for existing CrossMux screens that still draw through `UITheme`. They must not appear in new code; migrate an existing screen to a FreeInkUI host in a dedicated refactor rather than extending the bridge.
+The old bridge helpers (`rowTouch`, `colTouch`, `wasTapInRect`, manual rect `contains()` checks) are a compatibility boundary for existing CrossMax screens that still draw through `UITheme`. They must not appear in new code; migrate an existing screen to a FreeInkUI host in a dedicated refactor rather than extending the bridge.
 
 ---
 
@@ -152,10 +152,10 @@ Because the back gesture arrives as `Button::Back`, most button-era activities g
 
 | Helper | Status |
 |---|---|
-| `wasScreenTapped` / `wasScreenTouchDown` / `isScreenTouchHeld` | Consumed by the FUI snapshot builder and retained for existing custom-drawn CrossMux screens |
+| `wasScreenTapped` / `wasScreenTouchDown` / `isScreenTouchHeld` | Consumed by the FUI snapshot builder and retained for existing custom-drawn CrossMax screens |
 | `wasTapInRect(x, y, w, h)` | Legacy one-off hit test |
 | `rowTouch` / `colTouch` | Legacy row/column band math used by the theme-driven home screen and existing custom/game surfaces |
-| `wasListItemTapped` / `wasListItemTouchedDown` | Retained behind `Activity::handleListTouch()` for existing CrossMux themed lists; do not add callers |
+| `wasListItemTapped` / `wasListItemTouchedDown` | Retained behind `Activity::handleListTouch()` for existing CrossMax themed lists; do not add callers |
 | `wasSwipe()` | Raw swipe direction, for behavior beyond the global gestures (reader page turns) |
 | `hasTouch()` | Still fine anywhere: gate touch-only chrome (on-screen Cancel/OK pairs) on it |
 

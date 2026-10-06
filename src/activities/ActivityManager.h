@@ -128,6 +128,9 @@ class ActivityManager {
   void goToRecentBooks();
   void goToBrowser();
   void goToPlugins(bool showOpds);
+  // Apps-menu entry point: the launcher lists the OPDS browser on its own
+  // row, so the catalog does not repeat it.
+  void goToPluginCatalog();
   void goToReader(std::string path, bool allowFastInitialRefresh = false);
   void goToSleep(bool fromTimeout = false);
   void goToBoot();
@@ -142,6 +145,7 @@ class ActivityManager {
   void goToPixelSwitch();
   void goToCalculator();
   void goToWoodfish();
+  void goToLibraryScan();
   void goToAirPage();
   void goToBuddy();
   void goToStandby();

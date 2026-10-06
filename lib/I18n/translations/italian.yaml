@@ -4,7 +4,7 @@ _order: "12"
 _bcp47: "it"
 
 STR_ABOUT: "Informazioni"
-STR_CROSSPOINT: "CrossMux"
+STR_CROSSPOINT: "CrossMax"
 STR_ACCOUNT_CREATED: "Account creato"
 STR_ADD_HIDDEN_NETWORK: "Aggiungi rete nascosta..."
 STR_ADD_SERVER: "Aggiungi server"

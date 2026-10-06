@@ -11,9 +11,9 @@ pio run -e simulator_murphy_m4 -t run_simulator
 ```
 
 Hardware profiles and drivers live in the pinned `0x1abin/freeink-sdk`
-submodule on its long-lived `crossmux` branch. GPIO0 is the independent power
+submodule on its long-lived `crossmax` branch. GPIO0 is the independent power
 key, GPIO1/2 are Up/Down, and the FT6336U uses fixed-cadence background polling;
-CrossMux retains the two display batches, RX8010, GPIO43 charge input, SDMMC and
+CrossMax retains the two display batches, RX8010, GPIO43 charge input, SDMMC and
 product gates. AirPage, reading, library, settings, Web file transfer, and
 same-target SD firmware update remain available; remote OTA/catalog publication
 remains withheld.

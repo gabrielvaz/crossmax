@@ -195,14 +195,14 @@ jobs:
           mapfile -t assets < <(find artifacts -type f -print)
           gh release create "$BUILD_TAG" "${assets[@]}" \
             --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
-            --title "CrossMux ${CHANNEL^} ${GITHUB_SHA::7} #${GITHUB_RUN_NUMBER}" \
+            --title "CrossMax ${CHANNEL^} ${GITHUB_SHA::7} #${GITHUB_RUN_NUMBER}" \
             --notes-file notes/release-body.md --prerelease
       - name: Publish rolling global index last
         env:
           GH_TOKEN: ${{ github.token }}
           CHANNEL: ${{ needs.prepare.outputs.channel }}
         run: |
-          title="CrossMux ${CHANNEL^} (${GITHUB_SHA::7})"
+          title="CrossMax ${CHANNEL^} (${GITHUB_SHA::7})"
           if gh release view "$CHANNEL" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
             gh release edit "$CHANNEL" --repo "$GITHUB_REPOSITORY" \
               --target "$GITHUB_SHA" --title "$title" --notes-file notes/release-body.md --prerelease
@@ -358,10 +358,10 @@ jobs:
           if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
             gh release upload "$GITHUB_REF_NAME" "${assets[@]}" --repo "$GITHUB_REPOSITORY" --clobber
             gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" \
-              --title "CrossMux $GITHUB_REF_NAME" --notes-file notes/release-body.md --latest
+              --title "CrossMax $GITHUB_REF_NAME" --notes-file notes/release-body.md --latest
           else
             gh release create "$GITHUB_REF_NAME" "${assets[@]}" --repo "$GITHUB_REPOSITORY" \
-              --verify-tag --title "CrossMux $GITHUB_REF_NAME" --notes-file notes/release-body.md --latest
+              --verify-tag --title "CrossMax $GITHUB_REF_NAME" --notes-file notes/release-body.md --latest
           fi
 
   cleanup_github:

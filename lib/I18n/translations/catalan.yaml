@@ -3,7 +3,7 @@ _language_code: "CA"
 _order: "9"
 _bcp47: "ca"
 
-STR_CROSSPOINT: "CrossMux"
+STR_CROSSPOINT: "CrossMax"
 STR_BOOTING: "ARRENCANT"
 STR_SLEEPING: "ENTRANT EN REPÒS"
 STR_ENTERING_SLEEP: "Entrant en repòs"

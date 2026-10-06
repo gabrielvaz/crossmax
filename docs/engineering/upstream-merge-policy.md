@@ -1,15 +1,15 @@
 # Upstream-Merge Policy for the Agent Guide
 
-Use this policy to adapt upstream agent guidance to CrossMux. It covers
+Use this policy to adapt upstream agent guidance to CrossMax. It covers
 `AGENTS.md`, `.agents/skills/`, legacy inputs such as `CLAUDE.md`,
 `.skills/SKILL.md` and `.claude/skills/`, and any relocated guide bodies.
 The [Sync Upstream skill](../../.agents/skills/sync-upstream/SKILL.md#mandatory-manual-review)
 owns candidate management, interactive decisions, and publication records.
-This document owns content routing and the resulting CrossMux layout.
+This document owns content routing and the resulting CrossMax layout.
 
 ## Local structure
 
-- `AGENTS.md` is the sole agent entrypoint, a regular file containing CrossMux
+- `AGENTS.md` is the sole agent entrypoint, a regular file containing CrossMax
   identity, critical rules, common commands, and reference links.
 - `.agents/skills/` is a real directory for task-specific workflows and their
   scripts, tests, templates, and references.
@@ -17,7 +17,7 @@ This document owns content routing and the resulting CrossMux layout.
   [engineering index](index.md).
 
 Legacy upstream paths are migration inputs, not destinations. Do not restore
-platform-specific entrypoints or Claude automation. Preserve CrossMux's mission,
+platform-specific entrypoints or Claude automation. Preserve CrossMax's mission,
 `main` PR target, unified languages, lightweight apps, and target-specific
 hardware budgets when adapting upstream wording.
 
@@ -46,7 +46,7 @@ its referenced content checked.
 
 Account for every incoming hunk through the sync skill's review procedure (or
 the authorized manual merge review). Adapt commands, paths, and authorization
-rules to CrossMux rather than copying upstream workflow instructions verbatim.
+rules to CrossMax rather than copying upstream workflow instructions verbatim.
 
 | Incoming change | Local destination or disposition |
 |---|---|
@@ -54,7 +54,7 @@ rules to CrossMux rather than copying upstream workflow instructions verbatim.
 | Operational workflow and supporting resources | Corresponding `.agents/skills/` skill; preserve resource permissions and repair links |
 | New critical invariant | Short AGENTS rule plus details in the relevant topic |
 | New topic without an existing home | Focused engineering document with index and AGENTS links |
-| Identity, quick reference, or scope wording | AGENTS, reconciled with CrossMux policy |
+| Identity, quick reference, or scope wording | AGENTS, reconciled with CrossMax policy |
 | Upstream-only policy, feature freeze, or inapplicable behavior | Skip with a reason in the review |
 
 Resolve modify/delete and symlink conflicts explicitly. Keeping the local

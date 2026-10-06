@@ -150,12 +150,12 @@ def package_target(root, target_id, channel, output):
         'version': version_for(
             config['crosspoint']['version'], target_id, channel, 'global', short_sha
         ),
-        'crossmuxSha': git_value(root, 'rev-parse', 'HEAD'),
+        'crossmaxSha': git_value(root, 'rev-parse', 'HEAD'),
         'sdkSha': git_value(root / 'freeink-sdk', 'rev-parse', 'HEAD'),
         'assets': assets,
     }
     if target['fullInstall']:
-        manifest['partitionProfile'] = 'crossmux-sticky-v1'
+        manifest['partitionProfile'] = 'crossmax-sticky-v1'
         manifest['flash'] = {'size': 0x1000000, 'mode': 'dio', 'frequency': '80m'}
 
     manifest_paths = []

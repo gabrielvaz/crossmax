@@ -1,6 +1,6 @@
 # Apps
 
-The `apps/` directory holds all non-reader sub-applications shipped on CrossMux. They use the Apps launcher (`AppsMenuActivity`) and the conventions below; the main-tab and home navigation expose that launcher.
+The `apps/` directory holds all non-reader sub-applications shipped on CrossMax. They use the Apps launcher (`AppsMenuActivity`) and the conventions below; the main-tab and home navigation expose that launcher.
 
 The directory groups app implementations such as games, tools, reading analytics, and WeRead. The launcher also links to core workflows such as file transfer and OPDS; appearing in Apps does not require moving those implementations into this directory.
 

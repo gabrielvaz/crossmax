@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def run():
-    with tempfile.TemporaryDirectory(prefix="crossmux-tilt-") as directory:
+    with tempfile.TemporaryDirectory(prefix="crossmax-tilt-") as directory:
         root = Path(directory)
         env = dict(os.environ, CCACHE_DIR=str(root / "ccache"))
         (root / "Arduino.h").write_text("#pragma once\n#include <cstdint>\n#include <cmath>\nextern unsigned long clockMs;\ninline unsigned long millis() { return clockMs; }\n")

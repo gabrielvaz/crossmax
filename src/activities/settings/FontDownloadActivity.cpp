@@ -27,7 +27,7 @@
 #include "components/SubpageLayout.h"
 #include "components/UITheme.h"
 #include "fontIds.h"
-#include "network/CrossMuxEndpoints.h"
+#include "network/CrossMaxEndpoints.h"
 #include "network/HttpDownloader.h"
 
 namespace fui = freeink::ui;
@@ -362,7 +362,7 @@ bool FontDownloadActivity::fetchAndParseManifest() {
   }
   char manifestUrl[160];
   const int manifestUrlLength =
-      snprintf(manifestUrl, sizeof(manifestUrl), CrossMuxEndpoints::FONT_MANIFEST_FORMAT, CrossMuxEndpoints::host(),
+      snprintf(manifestUrl, sizeof(manifestUrl), CrossMaxEndpoints::FONT_MANIFEST_FORMAT, CrossMaxEndpoints::host(),
                FONT_MANIFEST_URL_STRINGIFY(FONTS_MANIFEST_VERSION), FONT_MANIFEST_URL_STRINGIFY(CPFONT_VERSION));
   if (manifestUrlLength < 0 || static_cast<size_t>(manifestUrlLength) >= sizeof(manifestUrl)) {
     LOG_ERR("FONT", "Manifest URL exceeds %zu bytes", sizeof(manifestUrl));

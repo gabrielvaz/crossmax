@@ -23,8 +23,10 @@
 #include "RecentBooksStore.h"
 #include "activities/plugins/PluginCatalogActivity.h"  // anyPluginInstalled()
 #include "components/UITheme.h"
+#include "components/themes/lyra/LyraListTheme.h"
 #include "fontIds.h"
 #include "util/BookCoverLoader.h"
+#include "util/TimeUtils.h"
 
 namespace {
 struct HomeMenuEntry {
@@ -33,13 +35,15 @@ struct HomeMenuEntry {
   UIIcon icon;
 };
 
+// Four rows, so the menu still fits under the recent-books tile on the 800px
+// panel. File transfer and the plugin catalog moved into Apps, which already
+// held the OPDS browser: they are destinations you visit occasionally, not
+// every time you pick up the reader.
 constexpr HomeMenuEntry kDefaultMenuOrder[] = {
-    {HomeMenuItem::FILE_BROWSER, StrId::STR_BROWSE_FILES, Folder},
     {HomeMenuItem::LIBRARY, StrId::STR_LIBRARY, Library},
-    {HomeMenuItem::OPDS_BROWSER, StrId::STR_OPDS_BROWSER, Blocks},
-    {HomeMenuItem::FILE_TRANSFER, StrId::STR_FILE_TRANSFER, Transfer},
-    {HomeMenuItem::SETTINGS_MENU, StrId::STR_SETTINGS_TITLE, Settings},
+    {HomeMenuItem::FILE_BROWSER, StrId::STR_BROWSE_FILES, Folder},
     {HomeMenuItem::APPS, StrId::STR_APPS_TITLE, Apps},
+    {HomeMenuItem::SETTINGS_MENU, StrId::STR_SETTINGS_TITLE, Settings},
 };
 constexpr HomeMenuEntry kCarouselMenuOrder[] = {
     {HomeMenuItem::FILE_BROWSER, StrId::STR_BROWSE_FILES, Folder},
@@ -49,45 +53,58 @@ constexpr HomeMenuEntry kCarouselMenuOrder[] = {
     {HomeMenuItem::FILE_TRANSFER, StrId::STR_FILE_TRANSFER, Transfer},
     {HomeMenuItem::SETTINGS_MENU, StrId::STR_SETTINGS_TITLE, Settings},
 };
-constexpr int kHomeMenuItemCount = 6;
+constexpr int kDefaultMenuItemCount = static_cast<int>(sizeof(kDefaultMenuOrder) / sizeof(kDefaultMenuOrder[0]));
+constexpr int kCarouselMenuItemCount = static_cast<int>(sizeof(kCarouselMenuOrder) / sizeof(kCarouselMenuOrder[0]));
 
-constexpr const HomeMenuEntry* menuEntryAtIndex(int index, bool hasOpds, bool carousel) {
-  if (index < 0) return nullptr;
-  if (!hasOpds && index >= 2) ++index;
-  if (index >= kHomeMenuItemCount) return nullptr;
-  return &(carousel ? kCarouselMenuOrder : kDefaultMenuOrder)[index];
+// Rows the home menu draws. Only the carousel still carries the shared
+// OPDS/plugins slot, which collapses when the device has neither.
+constexpr int homeMenuRowCount(bool librarySlot, bool carousel) {
+  if (!carousel) return kDefaultMenuItemCount;
+  return librarySlot ? kCarouselMenuItemCount : kCarouselMenuItemCount - 1;
 }
 
-constexpr HomeMenuItem indexToMenuItem(int index, bool hasOpds, bool carousel) {
-  const HomeMenuEntry* entry = menuEntryAtIndex(index, hasOpds, carousel);
+constexpr const HomeMenuEntry* menuEntryAtIndex(int index, bool librarySlot, bool carousel) {
+  if (index < 0) return nullptr;
+  if (!carousel) {
+    return index < kDefaultMenuItemCount ? &kDefaultMenuOrder[index] : nullptr;
+  }
+  if (!librarySlot && index >= 2) ++index;
+  return index < kCarouselMenuItemCount ? &kCarouselMenuOrder[index] : nullptr;
+}
+
+constexpr HomeMenuItem indexToMenuItem(int index, bool librarySlot, bool carousel) {
+  const HomeMenuEntry* entry = menuEntryAtIndex(index, librarySlot, carousel);
   return entry == nullptr ? HomeMenuItem::NONE : entry->item;
 }
 
-constexpr int menuItemToIndex(HomeMenuItem item, bool hasOpds, bool carousel) {
-  const int count = hasOpds ? kHomeMenuItemCount : kHomeMenuItemCount - 1;
-  for (int i = 0; i < count; ++i) {
-    if (indexToMenuItem(i, hasOpds, carousel) == item) return i;
+constexpr int menuItemToIndex(HomeMenuItem item, bool librarySlot, bool carousel) {
+  for (int i = 0; i < homeMenuRowCount(librarySlot, carousel); ++i) {
+    if (indexToMenuItem(i, librarySlot, carousel) == item) return i;
   }
   return 0;
 }
 
+static_assert(indexToMenuItem(0, false, false) == HomeMenuItem::LIBRARY);
+static_assert(indexToMenuItem(1, false, false) == HomeMenuItem::FILE_BROWSER);
+static_assert(indexToMenuItem(2, false, false) == HomeMenuItem::APPS);
+static_assert(indexToMenuItem(3, false, false) == HomeMenuItem::SETTINGS_MENU);
+// The row count no longer moves with the library slot outside the carousel.
+static_assert(homeMenuRowCount(true, false) == homeMenuRowCount(false, false));
+static_assert(menuItemToIndex(HomeMenuItem::APPS, true, false) == 2);
 static_assert(indexToMenuItem(2, false, true) == HomeMenuItem::APPS);
 static_assert(indexToMenuItem(4, false, true) == HomeMenuItem::SETTINGS_MENU);
 static_assert(indexToMenuItem(3, true, true) == HomeMenuItem::APPS);
 static_assert(indexToMenuItem(5, true, true) == HomeMenuItem::SETTINGS_MENU);
-static_assert(indexToMenuItem(2, false, false) == HomeMenuItem::FILE_TRANSFER);
-static_assert(indexToMenuItem(4, false, false) == HomeMenuItem::APPS);
 static_assert(menuItemToIndex(HomeMenuItem::APPS, false, true) == 2);
 static_assert(menuItemToIndex(HomeMenuItem::SETTINGS_MENU, true, true) == 5);
 }  // namespace
 
 int HomeActivity::getMenuItemCount() const {
-  int count = 5;  // File Browser, Recents, File transfer, Settings, Apps
+  const bool isCarousel =
+      static_cast<CrossPointSettings::UI_THEME>(SETTINGS.uiTheme) == CrossPointSettings::UI_THEME::LYRA_CAROUSEL;
+  int count = homeMenuRowCount(hasLibrarySlot(), isCarousel);
   if (!recentBooks.empty()) {
     count += recentBooks.size();
-  }
-  if (hasLibrarySlot()) {
-    count++;
   }
   return count;
 }
@@ -623,7 +640,8 @@ void HomeActivity::loop() {
       // Multi-cover themes (Lyra3Covers and the like) render several recent
       // books side by side: map the finger to the cover it is on instead of
       // always settling on the first book.
-      touchedBook = GUI.recentBookIndexAt(tx, renderer.getScreenWidth());
+      touchedBook = GUI.recentBookIndexAtPoint(
+          tx, ty, Rect{0, metrics.homeTopPadding, renderer.getScreenWidth(), metrics.homeCoverTileHeight});
       touchedBook = std::clamp(touchedBook, 0, static_cast<int>(recentBooks.size()) - 1);
     }
     if (selectorIndex != touchedBook) {
@@ -639,7 +657,8 @@ void HomeActivity::loop() {
       tapX < renderer.getScreenWidth() && tapY >= metrics.homeTopPadding &&
       tapY < metrics.homeTopPadding + metrics.homeCoverTileHeight) {
     if (!isCarousel) {
-      selectorIndex = GUI.recentBookIndexAt(tapX, renderer.getScreenWidth());
+      selectorIndex = GUI.recentBookIndexAtPoint(
+          tapX, tapY, Rect{0, metrics.homeTopPadding, renderer.getScreenWidth(), metrics.homeCoverTileHeight});
       selectorIndex = std::clamp(selectorIndex, 0, static_cast<int>(recentBooks.size()) - 1);
     }
     activateSelection();
@@ -684,6 +703,34 @@ void HomeActivity::loop() {
   }
 }
 
+void HomeActivity::drawStatusAndGreeting(const int pageWidth, const ThemeMetrics& metrics) {
+  const int side = metrics.contentSidePadding;
+  const int statusY = metrics.topPadding;
+
+  // Status band: time and date on the left, battery on the right.
+  char clock[16] = {};
+  std::tm now{};
+  if (TimeUtils::formatCurrentTime(clock, sizeof(clock), SETTINGS.clockFormat == 1) &&
+      TimeUtils::getLocalDateTime(TimeUtils::getCurrentValidTimestamp(), now)) {
+    char status[32];
+    snprintf(status, sizeof(status), "%s  %02u/%02u", clock, static_cast<unsigned>(now.tm_mday),
+             static_cast<unsigned>(now.tm_mon + 1));
+    renderer.drawText(SMALL_FONT_ID, side, statusY, status);
+  }
+  GUI.drawBatteryRight(
+      renderer, Rect{pageWidth - side - metrics.batteryWidth, statusY, metrics.batteryWidth, metrics.batteryHeight},
+      SETTINGS.hideBatteryPercentage == 0);
+
+  // Greeting band, under the status line.
+  if (SETTINGS.ownerName[0] != '\0') {
+    char greeting[64];
+    snprintf(greeting, sizeof(greeting), I18N.get(StrId::STR_HOME_GREETING), SETTINGS.ownerName);
+    const std::string shown = renderer.truncatedText(UI_12_FONT_ID, greeting, pageWidth - 2 * side);
+    renderer.drawText(UI_12_FONT_ID, side, statusY + LyraListMetrics::statusBandHeight, shown.c_str(), true,
+                      EpdFontFamily::BOLD);
+  }
+}
+
 void HomeActivity::render(RenderLock&&) {
   static_assert(canRenderCarouselMenuOnly(true, true, CarouselUpdateScope::MenuOnly));
   static_assert(!canRenderCarouselMenuOnly(false, true, CarouselUpdateScope::MenuOnly));
@@ -696,16 +743,24 @@ void HomeActivity::render(RenderLock&&) {
   const bool isCarousel =
       static_cast<CrossPointSettings::UI_THEME>(SETTINGS.uiTheme) == CrossPointSettings::UI_THEME::LYRA_CAROUSEL;
 
-  const int homeMenuItemCount = hasOpdsServers ? kHomeMenuItemCount : kHomeMenuItemCount - 1;
+  // Must match what activateSelection() resolves the tapped row to: the third
+  // slot is shared by the OPDS browser and the plugin catalog, so it exists
+  // whenever either does. Counting it with hasOpdsServers alone while the
+  // action counts it with hasLibrarySlot() shifts every row below it by one
+  // (plugins installed, no OPDS server: Apps opened Settings).
+  const int homeMenuItemCount = homeMenuRowCount(hasLibrarySlot(), isCarousel);
   const bool showContinueReading = metrics.homeContinueReadingInMenu && !recentBooks.empty();
   std::vector<const char*> menuItems;
   std::vector<UIIcon> menuIcons;
   menuItems.reserve(homeMenuItemCount + (showContinueReading ? 1 : 0));
   menuIcons.reserve(homeMenuItemCount + (showContinueReading ? 1 : 0));
   for (int i = 0; i < homeMenuItemCount; ++i) {
-    const HomeMenuEntry* entry = menuEntryAtIndex(i, hasOpdsServers, isCarousel);
-    menuItems.push_back(I18N.get(entry->label));
-    menuIcons.push_back(entry->item == HomeMenuItem::OPDS_BROWSER && hasPlugins ? Plugins : entry->icon);
+    const HomeMenuEntry* entry = menuEntryAtIndex(i, hasLibrarySlot(), isCarousel);
+    // The shared slot takes the plugin name as well as the plugin icon;
+    // labelling it "OPDS browser" while it opens the catalog reads as a bug.
+    const bool pluginSlot = entry->item == HomeMenuItem::OPDS_BROWSER && hasPlugins;
+    menuItems.push_back(I18N.get(pluginSlot ? StrId::STR_PLUGINS : entry->label));
+    menuIcons.push_back(pluginSlot ? Plugins : entry->icon);
   }
 
   if (showContinueReading) {
@@ -783,9 +838,14 @@ void HomeActivity::render(RenderLock&&) {
     // homeTopPadding, so the height must shrink by topPadding or the band (and a
     // centered title, e.g. RoundedRaff's book title) sinks into the tile.
     // Home is the stack root: no back button in its header.
-    GUI.drawHeader(renderer, Rect{0, metrics.topPadding, pageWidth, metrics.homeTopPadding - metrics.topPadding},
-                   metrics.homeContinueReadingInMenu && !recentBooks.empty() ? recentBooks[0].title.c_str() : nullptr,
-                   nullptr, false);
+    // Lyra List owns its header: a status band over a greeting line.
+    if (static_cast<CrossPointSettings::UI_THEME>(SETTINGS.uiTheme) == CrossPointSettings::UI_THEME::LYRA_LIST) {
+      drawStatusAndGreeting(pageWidth, metrics);
+    } else {
+      GUI.drawHeader(renderer, Rect{0, metrics.topPadding, pageWidth, metrics.homeTopPadding - metrics.topPadding},
+                     metrics.homeContinueReadingInMenu && !recentBooks.empty() ? recentBooks[0].title.c_str() : nullptr,
+                     nullptr, false);
+    }
   }
 
   // Record the tile rect so storeCoverBuffer (called from the theme) knows

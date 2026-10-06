@@ -3,7 +3,7 @@ _language_code: "P2"
 _order: "27"
 _bcp47: "pt-PT"
 
-STR_CROSSPOINT: "CrossMux"
+STR_CROSSPOINT: "CrossMax"
 STR_BOOTING: "A INICIAR"
 STR_SLEEPING: "EM REPOUSO"
 STR_ENTERING_SLEEP: "A entrar em repouso"

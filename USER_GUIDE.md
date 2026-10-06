@@ -243,7 +243,7 @@ The Settings screen allows you to configure the device's behavior. There are a f
   - "Inx" - The Recent/Library/Apps/Settings/Statistics layout described above
   - "Cover Grid" - A grid of library covers on devices with PSRAM; other pages use Lyra
 
-  Non-Inx themes retain upstream page styling, with an additional Apps entry and shared CrossMux settings. Boolean settings use checkboxes; multi-value settings retain their selectors. All themes share the same keyboard keys.
+  Non-Inx themes retain upstream page styling, with an additional Apps entry and shared CrossMax settings. Boolean settings use checkboxes; multi-value settings retain their selectors. All themes share the same keyboard keys.
   - "Inx" - A five-tab e-ink interface with a Recent home screen, icon/list Library and Apps layouts, and expandable Settings categories
 
 - **Inx Home Layout**: Choose Flow, Grid, List, Icons, or Cover for the Inx home screen. The default is Flow.

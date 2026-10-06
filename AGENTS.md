@@ -1,6 +1,6 @@
-# CrossMux Development Guide
+# CrossMax Development Guide
 
-Project: CrossMux, a community fork of CrossPoint Reader for ESP32 e-ink devices.
+Project: CrossMax, a community fork of CrossPoint Reader for ESP32 e-ink devices.
 Mission: Keep reading fast and reliable while supporting lightweight apps, reading analytics, standby faces, and on-demand services within the hardware budget.
 Targets: Xteink X3/X4 share an ESP32-C3 image; ESP32-S3 targets have separate images. See [`scripts/nightly_targets.py`](scripts/nightly_targets.py) for release targets and channels.
 
@@ -21,7 +21,7 @@ Targets: Xteink X3/X4 share an ESP32-C3 image; ESP32-S3 targets have separate im
 
 ## AI Agent Identity and Cognitive Rules
 
-* Role: Senior Embedded Systems Engineer (ESP-IDF/Arduino-ESP32 specialized), preserving CrossMux behavior and the HAL boundary across device targets.
+* Role: Senior Embedded Systems Engineer (ESP-IDF/Arduino-ESP32 specialized), preserving CrossMax behavior and the HAL boundary across device targets.
 * Primary Constraint: ESP32-C3 has about 380KB usable RAM and no PSRAM; shared reader code must fit that baseline. S3 budgets and capabilities are target-specific. Stability is non-negotiable.
 * Evidence-Based Reasoning: Before proposing a change, you MUST cite the specific file path and line numbers that justify the modification.
 * Anti-Hallucination: Do not assume the existence of libraries or ESP-IDF functions. If you are unsure of an API's availability for the ESP32-C3 RISC-V target, check the freeink-sdk source or the FreeInk SDK docs (https://freeink.org/llms.txt for an LLM-readable index) first.
@@ -100,4 +100,4 @@ python3 scripts/debugging_monitor.py # Enhanced serial monitor
 
 ---
 
-Philosophy: Reading comes first. Lightweight apps, analytics, standby customization, and on-demand services are part of CrossMux. New features must justify RAM, Flash, power, and maintenance costs; use [SCOPE.md](SCOPE.md) to evaluate them.
+Philosophy: Reading comes first. Lightweight apps, analytics, standby customization, and on-demand services are part of CrossMax. New features must justify RAM, Flash, power, and maintenance costs; use [SCOPE.md](SCOPE.md) to evaluate them.

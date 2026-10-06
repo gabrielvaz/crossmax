@@ -30,7 +30,7 @@ def main():
         sys.exit("SdFat source not found; run pio run -e default or pass its src directory.")
     source = (SDK / "src/SDCardManager.cpp").read_text()
     header = (SDK / "include/SDCardManager.h").read_text()
-    with tempfile.TemporaryDirectory(prefix="crossmux-sd-space-") as directory:
+    with tempfile.TemporaryDirectory(prefix="crossmax-sd-space-") as directory:
         temp = Path(directory)
         # Compile the production bodies, not a second implementation of the calculation/cache.
         (temp / "methods.inc").write_text("\n".join(method(source, signature) for signature in (

@@ -15,7 +15,7 @@ class BookCoverLoaderTest : public ::testing::Test {
  protected:
   void SetUp() override {
     static std::atomic<unsigned> serial{0};
-    root = std::filesystem::temp_directory_path() / ("crossmux-cover-loader-" + std::to_string(serial++));
+    root = std::filesystem::temp_directory_path() / ("crossmax-cover-loader-" + std::to_string(serial++));
     std::error_code error;
     std::filesystem::remove_all(root, error);
     ASSERT_TRUE(std::filesystem::create_directories(root, error));

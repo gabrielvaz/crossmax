@@ -93,14 +93,14 @@ int main() {
   r.preferredFontMap_.clear(); // unloading SD preserves fixed fallbacks
   assert(r.resolveTextFontId(14,"梦海")==12);
 }
-''', include_dirs=(ROOT / 'lib/Utf8',), defines=('CROSSMUX_UI_PROFILE_HIGH_DPI',))
+''', include_dirs=(ROOT / 'lib/Utf8',), defines=('CROSSMAX_UI_PROFILE_HIGH_DPI',))
 
     def test_high_dpi_reader_family_does_not_replace_ui(self):
         system = (ROOT / 'src/SdCardFontSystem.cpp').read_text()
         table = system[system.index('struct UiFontSize'):system.index('}  // namespace', system.index('struct UiFontSize'))]
         run_cpp(r'''
 #define ENABLE_CHINESE_VERSION 1
-#define CROSSMUX_UI_PROFILE_HIGH_DPI 1
+#define CROSSMAX_UI_PROFILE_HIGH_DPI 1
 #define SIMULATOR 1
 #define FREEINK_DEVICE_READPICO 1
 #define LOG_DBG(...) ((void)0)
@@ -203,7 +203,7 @@ int main() {
     assert(system.ttfUi_.capacity()>=5 && system.ttfUiIds_.capacity()>=5);
   }
 }
-''', defines=('CROSSMUX_UI_PROFILE_HIGH_DPI','FREEINK_DEVICE_READPICO=1'))
+''', defines=('CROSSMAX_UI_PROFILE_HIGH_DPI','FREEINK_DEVICE_READPICO=1'))
 
     def test_high_dpi_vector_unload_preserves_fixed_ui(self):
         system = (ROOT / 'src/SdCardFontSystem.cpp').read_text()
@@ -238,7 +238,7 @@ int main() {
   system.unloadTtf(renderer);
   assert(renderer.removed.size()==3);
 }
-''', defines=('CROSSMUX_UI_PROFILE_HIGH_DPI',))
+''', defines=('CROSSMAX_UI_PROFILE_HIGH_DPI',))
 
     def test_missing_outline_geometry(self):
         renderer = (ROOT / 'lib/GfxRenderer/GfxRenderer.cpp').read_text()

@@ -6,7 +6,7 @@
 
 namespace pixel_switch {
 
-inline constexpr char MQTT_TOPIC[] = "crossmux/pixel-switch/v1/canvas";
+inline constexpr char MQTT_TOPIC[] = "crossmax/pixel-switch/v1/canvas";
 inline constexpr uint32_t PUBLISH_DEBOUNCE_MS = 2000u;
 inline constexpr uint32_t RECONNECT_WINDOW_MS = 120000u;
 

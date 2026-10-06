@@ -320,7 +320,7 @@ int GfxRenderer::resolveTextFontId(const int fontId, const char* text, const Epd
   const auto fontIt = fontMap.find(effectiveFontId);
   if (fontIt == fontMap.end()) return effectiveFontId;
   const EpdFontFamily& primary = fontIt->second;
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
   // UI subsets can cover only part of a filename. Choose one face for the
   // complete run, following the existing CJK subset -> common CJK -> RTL chain.
   // Eight IDs bound the registered UI/SD chain; duplicate IDs also break cycles.
@@ -853,13 +853,13 @@ int GfxRenderer::getTextWidth(const int fontId, const char* text, const EpdFontF
 
   // Measure with the same font drawText would render with (see resolveTextFontId)
   // so wrapping, truncation and centering of CJK strings stay consistent.
-#ifndef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifndef CROSSMAX_UI_PROFILE_HIGH_DPI
   const int resolvedFontId = resolveTextFontId(fontId, text, style);
 #endif
 
   std::string visual;
   const char* renderedText = resolveVisualText(text, visual, baseDir);
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
   const int resolvedFontId = resolveTextFontId(fontId, renderedText, style);
 #endif
   const auto fontIt = fontMap.find(resolvedFontId);
@@ -898,13 +898,13 @@ void GfxRenderer::drawText(const int fontId, const int x, const int y, const cha
 
   // Route CJK-bearing strings to the fallback font when the requested font
   // lacks the glyphs (e.g. Chinese book titles drawn with a Latin UI font).
-#ifndef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifndef CROSSMAX_UI_PROFILE_HIGH_DPI
   const int resolvedFontId = resolveTextFontId(fontId, text, renderStyle);
 #endif
 
   std::string visual;
   const char* renderedText = resolveVisualText(text, visual, baseDir);
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
   const int resolvedFontId = resolveTextFontId(fontId, renderedText, renderStyle);
 #endif
 
@@ -2487,7 +2487,7 @@ int GfxRenderer::getKerning(int fontId, const uint32_t leftCp, const uint32_t ri
 int GfxRenderer::getTextAdvanceX(int fontId, const char* text, EpdFontFamily::Style style, const int8_t tracking,
                                  const BidiUtils::BidiBaseDir baseDir, const TextMeasureMode mode) const {
   // Match the font drawText would use for CJK-bearing strings (see resolveTextFontId).
-#ifndef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifndef CROSSMAX_UI_PROFILE_HIGH_DPI
   const int resolvedFontId = resolveTextFontId(fontId, text, style);
 #endif
   // Measure the exact codepoint stream drawText renders: bidi-reordered and
@@ -2498,7 +2498,7 @@ int GfxRenderer::getTextAdvanceX(int fontId, const char* text, EpdFontFamily::St
   // right margin.
   std::string visual;
   text = resolveVisualText(text, visual, baseDir);
-#ifdef CROSSMUX_UI_PROFILE_HIGH_DPI
+#ifdef CROSSMAX_UI_PROFILE_HIGH_DPI
   const int resolvedFontId = resolveTextFontId(fontId, text, style);
 #endif
 

@@ -51,6 +51,8 @@ class CrossPointSettings : public PersistableStore<CrossPointSettings> {
     COVER_CUSTOM = 5,
     QUICK_RESUME = 6,
     TRANSPARENT = 7,
+    // Clock card: large time, date and the owner's contact details. No cover.
+    OWNER_CARD = 8,
     SLEEP_SCREEN_MODE_COUNT
   };
   enum SLEEP_SCREEN_COVER_MODE { FIT = 0, CROP = 1, SLEEP_SCREEN_COVER_MODE_COUNT };
@@ -248,6 +250,10 @@ class CrossPointSettings : public PersistableStore<CrossPointSettings> {
     LONG_PRESS_BUTTON_BEHAVIOR_COUNT
   };
 
+  // Sleep screen footer: nothing, the reading state, or the reading state plus
+  // the owner's contact details for a reader that gets lost.
+  enum SLEEP_STAMP : uint8_t { SLEEP_STAMP_OFF = 0, SLEEP_STAMP_READING = 1, SLEEP_STAMP_OWNER = 2, SLEEP_STAMP_COUNT };
+
   // UI Theme
   enum UI_THEME {
     CLASSIC = 0,
@@ -256,7 +262,10 @@ class CrossPointSettings : public PersistableStore<CrossPointSettings> {
     ROUNDEDRAFF = 3,
     LYRA_CAROUSEL = 4,
     INX = 5,
-    COVER_GRID = 6
+    // Lyra List sits before Cover Grid so the theme picker can keep dropping
+    // its last entry on boards without PSRAM, where Cover Grid is unavailable.
+    LYRA_LIST = 6,
+    COVER_GRID = 7
   };
   enum INX_TAB_POSITION { INX_TAB_TOP = 0, INX_TAB_BOTTOM = 1, INX_TAB_POSITION_COUNT };
 
@@ -321,6 +330,10 @@ class CrossPointSettings : public PersistableStore<CrossPointSettings> {
   uint8_t sleepScreenCoverMode = FIT;
   // Sleep screen cover filter
   uint8_t sleepScreenCoverFilter = NO_FILTER;
+  // Footer drawn under the sleep image. The panel holds one frame while
+  // asleep, so the time reads as "stopped reading at", not as a clock: it
+  // never advances until the next sleep. Values are SLEEP_STAMP.
+  uint8_t sleepScreenTimestamp = 0;
   // Status bar settings (statusBar is retained only for settings.bin migration).
   uint8_t statusBar = FULL;
   uint8_t statusBarChapterPageCount = 1;
@@ -420,6 +433,10 @@ class CrossPointSettings : public PersistableStore<CrossPointSettings> {
   // OPDS server list. Persisted via a category-less SettingInfo::String in
   // SettingsList.h, so it stays out of the on-device Settings screen.
   char opdsDownloadFolder[64] = "";
+  // Shown on the sleep screen when the footer is set to include the owner, so
+  // a lost reader can be returned.
+  char ownerName[40] = "";
+  char ownerPhone[24] = "";
   // On-disk filename format for OPDS downloads (0=Author-Title default, 1=Title-Author,
   // 2=Title). See OpdsFilenameFormat. Persisted via a category-less SettingInfo::Enum,
   // edited from the OPDS server list; hidden from the on-device Settings screen.

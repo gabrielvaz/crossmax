@@ -1,6 +1,6 @@
 ---
 name: sync-upstream
-description: Inspect, rehearse, and publish approval-gated upstream synchronization for CrossMux, its FreeInk SDK fork, and its CrossPoint Simulator fork. Use when comparing or syncing upstream changes through isolated candidates and separate draft pull requests.
+description: Inspect, rehearse, and publish approval-gated upstream synchronization for CrossMax, its FreeInk SDK fork, and its CrossPoint Simulator fork. Use when comparing or syncing upstream changes through isolated candidates and separate draft pull requests.
 ---
 
 # Sync Upstream
@@ -10,7 +10,7 @@ Synchronize three components in order:
 1. `Free-Ink/freeink-sdk:main` into `0x1abin/freeink-sdk:main`.
 2. `crosspoint-reader/crosspoint-simulator:main` into
    `0x1abin/crosspoint-simulator:main`.
-3. `crosspoint-reader/crosspoint-reader:develop` into CrossMux, pinning both
+3. `crosspoint-reader/crosspoint-reader:develop` into CrossMax, pinning both
    reviewed fork revisions.
 
 Never commit directly on a component's base branch. Never merge a dependency
@@ -18,7 +18,7 @@ pull request or flash hardware as part of this skill.
 
 ## Staged workflow
 
-Run one phase at a time from the CrossMux repository root:
+Run one phase at a time from the CrossMax repository root:
 
 ```bash
 python3 .agents/skills/sync-upstream/scripts/sync_upstream.py inspect
@@ -27,7 +27,7 @@ python3 .agents/skills/sync-upstream/scripts/sync_upstream.py publish \
   --component sdk --candidate /path/printed/by/start --draft
 ```
 
-Repeat `start` and `publish` for `simulator`, then `crossmux`. `start` prepares
+Repeat `start` and `publish` for `simulator`, then `crossmax`. `start` prepares
 an isolated candidate and prints its path; it never commits, pushes, or opens a
 pull request. `publish` is a separate, externally mutating step and requires
 the user's explicit authorization in the current conversation. There is no
@@ -39,7 +39,7 @@ the same repeatable pins to every phase:
 ```bash
 --upstream-pin sdk=<sha> \
 --upstream-pin simulator=<sha> \
---upstream-pin crossmux=<sha>
+--upstream-pin crossmax=<sha>
 ```
 
 Each pin must be a full commit SHA reachable from that component's configured
@@ -47,15 +47,15 @@ upstream branch. A pinned workflow tolerates a parent branch fast-forward, but
 still stops on a rewritten parent history or any Fork/base movement.
 
 `inspect` always checks all three components. If a dependency fork is behind,
-sync it even when the incoming CrossMux commit does not change that dependency.
+sync it even when the incoming CrossMax commit does not change that dependency.
 Do not start `simulator` until the SDK fork contains its parent `main`; do not
-start `crossmux` until both dependency forks contain their parent `main` and no
+start `crossmax` until both dependency forks contain their parent `main` and no
 corresponding sync pull request remains open.
 
 ## Local integration rehearsal
 
 When the user authorizes integration before dependency PRs land, use
-`start --local-rehearsal` for SDK, Simulator, then CrossMux, with identical
+`start --local-rehearsal` for SDK, Simulator, then CrossMax, with identical
 upstream pins and candidate root. Review and stage each dependency, then repeat
 its `start --local-rehearsal` with one approved `--review-note` per review item.
 The next stage accepts only that conflict-free, unchanged reviewed index. The
@@ -64,7 +64,7 @@ upstream commit and Git source-tree fingerprint in the dependent review state.
 Verify reused exports against the reviewed index before consuming them; changed
 review scope invalidates the recorded approval. Use those exported sources for
 validation builds, including the final firmware.
-CrossMux rehearsal starts at the current checkout's HEAD; carry its existing
+CrossMax rehearsal starts at the current checkout's HEAD; carry its existing
 uncommitted changes into the candidate and review their overlaps too.
 
 Rehearsal never means approval to publish. `publish` rejects these candidates;
@@ -78,7 +78,7 @@ After each `start`, before resolving anything, read the
 [agent-guide merge policy](../../../docs/engineering/upstream-merge-policy.md)
 and inspect the upstream document delta, even when Git reports no conflicts.
 Use the candidate's recorded `base_sha` and `upstream_sha`; follow the policy's
-content routing and verification requirements for CrossMux. Review SDK and
+content routing and verification requirements for CrossMax. Review SDK and
 simulator guide changes too, using each fork's existing document structure.
 The script does not discover cross-path document equivalents or convert content.
 
@@ -111,7 +111,7 @@ adaptation or skip reason.
 
 Group files only when they form one behavior chain, listing every covered review
 item. Restate each approved choice before applying it. Do not resolve, stage,
-commit, push, or open a PR for unanswered items. Preserve CrossMux branding,
+commit, push, or open a PR for unanswered items. Preserve CrossMax branding,
 apps, releases, translations, and device behavior unless explicitly approved
 otherwise; follow the shared rules in [AGENTS.md](../../../AGENTS.md).
 
@@ -151,7 +151,7 @@ historical visual baseline and record actual page differences for this exception
 
 For every other theme, use the reviewed upstream snapshot as the visual source
 of truth: keep its implementation style, layout, font bindings and font sizes.
-CrossMux-only screens use that theme's existing components and styling. Honor
+CrossMax-only screens use that theme's existing components and styling. Honor
 explicitly approved exceptions for fork-only home screens; their shared pages
 must follow the selected upstream counterpart. Scope
 INX compatibility overrides to INX; shared SDK and simulator defaults must keep
@@ -159,10 +159,10 @@ upstream behavior for other themes. Review clean merges for leaked overrides.
 
 Menu structure is part of the contract. For non-INX themes, keep upstream
 items in their original categories, relative order and visibility conditions.
-Retain CrossMux extension settings in every theme, using the same shared data
+Retain CrossMax extension settings in every theme, using the same shared data
 source, categories, relative insertion points and action/value bindings. Position
 means menu structure, not a fixed pixel coordinate. Do not hide extension settings
-or move them into APP to obtain parity. Preserve persistence, Web API, CrossMux
+or move them into APP to obtain parity. Preserve persistence, Web API, CrossMax
 update services and device capability checks.
 
 Home adds one APP entry to the upstream entries. Lyra Carousel explicitly keeps
@@ -185,7 +185,7 @@ Record relevant behavioral overlaps through `--behavior-overlap` and reuse the
 user's explicit theme-preservation decisions when reviewing those items.
 
 Run `python3 test/inx_navigation/test_inx_style_compat.py` before and after the
-sync, using the reviewed SDK in the CrossMux validation checkout. Extend existing
+sync, using the reviewed SDK in the CrossMax validation checkout. Extend existing
 coverage for affected headers and dialogs; never replace the visual baseline to
 hide a regression. Compare representative INX screens under the same content,
 language, settings, orientation, and scale. Draw/hit traces use fixed font metrics
@@ -213,7 +213,7 @@ comparison; unexplained differences block an upstream-parity delivery.
 
 Explicitly approved checkbox increment for the fixed rehearsal: Reader
 `93e98bb` plus `d1509d0`, SDK `5deb923c` plus `e41f683e`, Simulator `8699595`,
-on CrossMux base `9d02f498`. Record increments separately from the pinned base;
+on CrossMax base `9d02f498`. Record increments separately from the pinned base;
 do not advance other upstream functionality or rebase main during this delivery.
 Non-INX boolean settings, reader menu and toolbar rows use the upstream checkbox
 and hit geometry. The user additionally approved uniform setting controls in INX:
@@ -229,11 +229,11 @@ baselines remain immutable. A later latest-main/upstream sync is a separate task
 After document verification, `publish` still performs component-specific checks
 unless `--skip-builds` was explicitly authorized:
 
-- SDK: its four existing host test scripts, then the CrossMux PlatformIO
+- SDK: its four existing host test scripts, then the CrossMax PlatformIO
   validation and any repeatable `--extra-build-env` values.
-- Simulator: its host compatibility self-test, all four CrossMux simulator
-  environments, and the CrossMux CMake/CTest host suite.
-- CrossMux: index/conflict-marker checks, `git diff --check`, `pio run`,
+- Simulator: its host compatibility self-test, all four CrossMax simulator
+  environments, and the CrossMax CMake/CTest host suite.
+- CrossMax: index/conflict-marker checks, `git diff --check`, `pio run`,
   `pio run -e gh_release`, and extra build environments.
 
 SDK integration builds export the reviewed Git index into a real directory.
@@ -242,5 +242,5 @@ untracked/ignored debug artifacts; directory symlinks break PlatformIO's
 framework dependency path matching. Conflict-marker checks scan text files,
 so binary font bytes cannot produce false conflicts.
 
-Report local checks, dependency Draft PRs, CrossMux Draft PR, CI, deployment,
+Report local checks, dependency Draft PRs, CrossMax Draft PR, CI, deployment,
 and physical-device acceptance separately.

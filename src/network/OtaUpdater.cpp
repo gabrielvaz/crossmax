@@ -19,7 +19,7 @@
 #include <string>
 #include <string_view>
 
-#include "CrossMuxEndpoints.h"
+#include "CrossMaxEndpoints.h"
 #include "FirmwareBoardTag.h"
 #include "FirmwareFlasher.h"
 
@@ -65,8 +65,8 @@ OtaUpdater::OtaUpdaterError OtaUpdater::checkForUpdate(const Channel requestedCh
   char releaseUrl[releaseUrlCapacity];
   const char* channelQuery = channel == Channel::Nightly ? "&channel=nightly" : "";
   const int releaseUrlLength =
-      snprintf(releaseUrl, sizeof(releaseUrl), CrossMuxEndpoints::OTA_MANIFEST_FORMAT, CrossMuxEndpoints::host(),
-               CrossMuxEndpoints::otaVariant(), channelQuery, HalSystem::getDeviceModel());
+      snprintf(releaseUrl, sizeof(releaseUrl), CrossMaxEndpoints::OTA_MANIFEST_FORMAT, CrossMaxEndpoints::host(),
+               CrossMaxEndpoints::otaVariant(), channelQuery, HalSystem::getDeviceModel());
   if (releaseUrlLength < 0 || static_cast<size_t>(releaseUrlLength) >= sizeof(releaseUrl)) {
     LOG_ERR("OTA", "Release URL exceeds %zu bytes", sizeof(releaseUrl));
     return INTERNAL_UPDATE_ERROR;

@@ -76,7 +76,7 @@ int main() {
  }
 }
 ''', include_dirs=(ROOT / 'src', ROOT / 'freeink-sdk/libs/assets/Icons/include'),
-                defines=('CROSSMUX_UI_PROFILE_HIGH_DPI',))
+                defines=('CROSSMAX_UI_PROFILE_HIGH_DPI',))
 
     def test_battery_fill_charge_bounds_and_orientation(self):
         source = (ROOT / 'src/components/themes/BaseTheme.cpp').read_text()
@@ -139,7 +139,7 @@ int main() {
  }
 }
 ''', include_dirs=(ROOT / 'src', ROOT / 'freeink-sdk/libs/assets/Icons/include'),
-                defines=('CROSSMUX_UI_PROFILE_HIGH_DPI',))
+                defines=('CROSSMAX_UI_PROFILE_HIGH_DPI',))
 
     def test_footer_descenders_and_estimate_fit_the_status_line(self):
         faces = {}
@@ -270,7 +270,7 @@ int main() {
    assert(r.texts[1].y+std::max(footerLineHeight,34)==r.height-r.bottom-10-UiHighDpiProfile::readerStatusBottomPadding);
  }
 }
-''', defines=('CROSSMUX_UI_PROFILE_HIGH_DPI','FREEINK_DEVICE_READPICO=1'))
+''', defines=('CROSSMAX_UI_PROFILE_HIGH_DPI','FREEINK_DEVICE_READPICO=1'))
 
     def test_reader_content_reclaims_footer_padding_without_moving_text(self):
         layout_source = (ROOT / 'src/components/UITheme.cpp').read_text()
@@ -349,7 +349,7 @@ int main() {
  }
 }
 '''
-        for defines in (('CROSSMUX_UI_PROFILE_HIGH_DPI', 'FREEINK_DEVICE_READPICO=1'), ()):
+        for defines in (('CROSSMAX_UI_PROFILE_HIGH_DPI', 'FREEINK_DEVICE_READPICO=1'), ()):
             run_cpp(program, defines=defines)
 
 

@@ -20,7 +20,7 @@
 #include "components/UITheme.h"
 #include "components/UiAppHelpers.h"
 #include "fontIds.h"
-#include "network/CrossMuxEndpoints.h"
+#include "network/CrossMaxEndpoints.h"
 #include "network/HttpDownloader.h"
 #include "util/QrUtils.h"
 #include "util/TimeUtils.h"
@@ -111,8 +111,8 @@ void AirPageActivity::onEnter() {
   const std::string& deviceId = airpage::deviceId();
   uploadUrl_.reserve(64 + deviceId.size());
   uploadUrl_ = "https://";
-  uploadUrl_ += CrossMuxEndpoints::AIRPAGE_SUBDOMAIN;
-  uploadUrl_ += CrossMuxEndpoints::host();
+  uploadUrl_ += CrossMaxEndpoints::AIRPAGE_SUBDOMAIN;
+  uploadUrl_ += CrossMaxEndpoints::host();
   uploadUrl_ += "/?id=";
   uploadUrl_ += deviceId;
   char displayParams[48];
@@ -123,16 +123,16 @@ void AirPageActivity::onEnter() {
 
   downloadUrl_.reserve(64 + deviceId.size());
   downloadUrl_ = "https://";
-  downloadUrl_ += CrossMuxEndpoints::AIRPAGE_SUBDOMAIN;
-  downloadUrl_ += CrossMuxEndpoints::host();
+  downloadUrl_ += CrossMaxEndpoints::AIRPAGE_SUBDOMAIN;
+  downloadUrl_ += CrossMaxEndpoints::host();
   downloadUrl_ += "/api/device/";
   downloadUrl_ += deviceId;
   downloadUrl_ += "/latest";
 
   legacyDownloadUrl_.reserve(64 + deviceId.size());
   legacyDownloadUrl_ = "https://";
-  legacyDownloadUrl_ += CrossMuxEndpoints::AIRPAGE_SUBDOMAIN;
-  legacyDownloadUrl_ += CrossMuxEndpoints::host();
+  legacyDownloadUrl_ += CrossMaxEndpoints::AIRPAGE_SUBDOMAIN;
+  legacyDownloadUrl_ += CrossMaxEndpoints::host();
   legacyDownloadUrl_ += "/api/device/";
   legacyDownloadUrl_ += deviceId;
   legacyDownloadUrl_ += "/latest.bmp";

@@ -43,7 +43,7 @@ class HalDisplay {
   // from; GfxRenderer::begin() replaces them with the live values from
   // display.getDisplayWidth()/getDisplayHeight()/getDisplayWidthBytes()/
   // getBufferSize() (GfxRenderer.cpp:134-137), which is the single source of
-  // truth for layout. Nothing in CrossMux may hardcode 800/480 instead of asking
+  // truth for layout. Nothing in CrossMax may hardcode 800/480 instead of asking
   // the renderer (golden rule #8).
   //
   // Every target except Read Pico keeps the SDK's 800x480 / 48,000-byte default

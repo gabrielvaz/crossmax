@@ -10,7 +10,7 @@ This page defines the expected local workflow before opening a pull request.
   and the maintainer checkout can use different remote names.
 - Enable repo hooks once per clone: `git config core.hooksPath .githooks && chmod +x .githooks/pre-commit`
 
-- Branch from CrossMux `main`; agents default to `codex/<topic>`
+- Branch from CrossMax `main`; agents default to `codex/<topic>`
 - Keep each PR focused on one fix or feature area
 
 ## 2) Implement with scope in mind

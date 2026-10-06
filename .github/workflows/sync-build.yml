@@ -1,6 +1,6 @@
 name: Sync PR build verify
 
-# Build the unified release for CrossMux candidates created by the
+# Build the unified release for CrossMax candidates created by the
 # sync-upstream skill. Regular PR CI covers the development build and code
 # checks; this workflow adds gh_release and can also be run manually.
 

@@ -2,7 +2,7 @@
 
 These are the unmodified SVG originals needed by `uiChromeIcons.manifest`,
 `listIcons.manifest`, `readerToolbarIcons.manifest` and the chrome generator's
-battery/settings/status variants. Maintain these files in CrossMux so changing
+battery/settings/status variants. Maintain these files in CrossMax so changing
 the SDK's icon collection does not silently change the UI assets.
 
 Source: <https://github.com/lucide-icons/lucide>, revision

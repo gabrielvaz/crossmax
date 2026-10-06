@@ -23,7 +23,7 @@ OFFSETS = {'bootloader': 0x0000, 'partitions': 0x8000, 'boot_app0': 0xE000, 'fir
 
 
 def fetch_bytes(url, attempts=3):
-    request = urllib.request.Request(url, headers={'User-Agent': 'crossmux-firmware-verifier'})
+    request = urllib.request.Request(url, headers={'User-Agent': 'crossmax-firmware-verifier'})
     for attempt in range(attempts):
         try:
             with urllib.request.urlopen(request, timeout=60) as response:
@@ -104,7 +104,7 @@ def verify_release(index_url, expected_sha, channel, fetch=fetch_bytes):
         manifest_urls = {}
         for flavor in FLAVOR_TOKENS:
             pointer = variants[flavor]
-            if not isinstance(pointer, dict) or not SHA40.fullmatch(str(pointer.get('crossmuxSha', ''))) or not SHA40.fullmatch(
+            if not isinstance(pointer, dict) or not SHA40.fullmatch(str(pointer.get('crossmaxSha', ''))) or not SHA40.fullmatch(
                 str(pointer.get('sdkSha', ''))
             ) or not isinstance(pointer.get('version'), str) or not isinstance(pointer.get('publishedAt'), str):
                 raise ValueError(f'invalid {target_id}/{flavor} pointer')
@@ -115,13 +115,13 @@ def verify_release(index_url, expected_sha, channel, fetch=fetch_bytes):
             manifest = read_json(manifest_url, fetch)
             if not valid_manifest(manifest, target_id, flavor, channel):
                 raise ValueError(f'invalid {target_id}/{flavor} manifest')
-            for key in ('version', 'crossmuxSha', 'sdkSha'):
+            for key in ('version', 'crossmaxSha', 'sdkSha'):
                 if manifest.get(key) != pointer.get(key):
                     raise ValueError(f'{target_id}/{flavor} manifest does not match its index pointer')
             manifests[flavor] = manifest
             manifest_urls[flavor] = manifest_url
 
-        revisions = {manifest['crossmuxSha'] for manifest in manifests.values()}
+        revisions = {manifest['crossmaxSha'] for manifest in manifests.values()}
         sdk_revisions = {manifest['sdkSha'] for manifest in manifests.values()}
         versions = {manifest['version'] for manifest in manifests.values()}
         if len(revisions) != 1 or len(sdk_revisions) != 1 or len(versions) != 1:

@@ -3,7 +3,7 @@ _language_code: "BG"
 _order: "36"
 _bcp47: "bg"
 
-STR_CROSSPOINT: "CrossMux"
+STR_CROSSPOINT: "CrossMax"
 STR_BOOTING: "ЗАРЕЖДАНЕ"
 STR_SLEEPING: "СПЯЩ РЕЖИМ"
 STR_ENTERING_SLEEP: "Преминаване в спящ режим"

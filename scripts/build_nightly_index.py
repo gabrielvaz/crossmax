@@ -26,8 +26,8 @@ def valid_manifest(manifest, target_id, flavor, channel):
         and manifest.get('supportedChannels') == target['supportedChannels']
         and manifest.get('environment') == environment_for(target_id, channel, flavor)
         and manifest.get('flavor') == flavor
-        and isinstance(manifest.get('crossmuxSha'), str)
-        and len(manifest['crossmuxSha']) == 40
+        and isinstance(manifest.get('crossmaxSha'), str)
+        and len(manifest['crossmaxSha']) == 40
         and isinstance(manifest.get('sdkSha'), str)
         and len(manifest['sdkSha']) == 40
         and isinstance(manifest.get('assets'), list)
@@ -49,7 +49,7 @@ def manifest_url(base_url, region, target_id, flavor):
 
 def build_index(manifest_root, region, base_url, updated_at, build_id, channel, release_notes=None):
     targets = {}
-    crossmux_revisions = set()
+    crossmax_revisions = set()
     sdk_revisions = set()
     for target_id, target in targets_for(channel).items():
         manifests = {}
@@ -61,7 +61,7 @@ def build_index(manifest_root, region, base_url, updated_at, build_id, channel, 
             if not valid_manifest(manifest, target_id, flavor, channel):
                 raise ValueError(f'invalid {target_id}/{flavor} manifest')
             manifests[flavor] = manifest
-        revisions = {manifest['crossmuxSha'] for manifest in manifests.values()}
+        revisions = {manifest['crossmaxSha'] for manifest in manifests.values()}
         if len(revisions) != 1:
             raise ValueError(f'{target_id} flavor revisions do not match')
         target_sdk_revisions = {manifest['sdkSha'] for manifest in manifests.values()}
@@ -71,7 +71,7 @@ def build_index(manifest_root, region, base_url, updated_at, build_id, channel, 
             raise ValueError(f'{target_id} flavor versions do not match')
         if len({json.dumps(manifest['assets'], sort_keys=True) for manifest in manifests.values()}) != 1:
             raise ValueError(f'{target_id} flavor assets do not match')
-        crossmux_revisions.update(revisions)
+        crossmax_revisions.update(revisions)
         sdk_revisions.update(target_sdk_revisions)
         targets[target_id] = {
             'targetId': target_id,
@@ -82,7 +82,7 @@ def build_index(manifest_root, region, base_url, updated_at, build_id, channel, 
             'variants': {
                 flavor: {
                     'version': manifest['version'],
-                    'crossmuxSha': manifest['crossmuxSha'],
+                    'crossmaxSha': manifest['crossmaxSha'],
                     'sdkSha': manifest['sdkSha'],
                     'publishedAt': updated_at,
                     'manifestUrl': manifest_url(base_url, region, target_id, flavor),
@@ -90,8 +90,8 @@ def build_index(manifest_root, region, base_url, updated_at, build_id, channel, 
                 for flavor, manifest in manifests.items()
             },
         }
-    if len(crossmux_revisions) != 1:
-        raise ValueError('target CrossMux revisions do not match')
+    if len(crossmax_revisions) != 1:
+        raise ValueError('target CrossMax revisions do not match')
     if len(sdk_revisions) != 1:
         raise ValueError('target SDK revisions do not match')
     if channel == 'stable' and release_notes is None:

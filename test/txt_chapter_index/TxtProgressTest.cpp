@@ -14,7 +14,7 @@
 namespace {
 class TxtProgressTest : public ::testing::Test {
  protected:
-  std::filesystem::path root = std::filesystem::temp_directory_path() / "crossmux-txt-progress";
+  std::filesystem::path root = std::filesystem::temp_directory_path() / "crossmax-txt-progress";
   void SetUp() override {
     std::filesystem::remove_all(root);
     std::filesystem::create_directories(root / "old");

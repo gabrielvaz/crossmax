@@ -8,14 +8,14 @@
 > 必须由人决策的岔路口、已知缺陷，以及恢复工作时的入口。设备事实与冻结接口规格见
 > [read-pico.md](read-pico.md)（89,629 B）。
 >
-> 工作树 `D:\CrossSIGO\crossmux-upstream`（基线 80c67543, main），未提交任何 commit。
+> 工作树 `D:\CrossSIGO\crossmax-upstream`（基线 80c67543, main），未提交任何 commit。
 > 编译后才暴露的 4 个问题见第 8 节——其中 3 个正是"没跑评审门"的直接代价。
 
 ---
 
 ## 1. 一句话结论
 
-SDK 板级、16 位并行显示路径、四个外设后端、CrossMux HAL 与 `readpico` 构建环境**都已写好并编译通过**
+SDK 板级、16 位并行显示路径、四个外设后端、CrossMax HAL 与 `readpico` 构建环境**都已写好并编译通过**
 （`firmware.bin` 5.77 MB）。但仍然**没有任何真机验证**。距离"能用"只差两步：
 **整片备份 + 烧写 → 上真机按验收清单跑**。所有"能亮、能翻页、能读卡"的说法目前都还不成立。
 
@@ -126,9 +126,9 @@ SDK 板级、16 位并行显示路径、四个外设后端、CrossMux HAL 与 `r
   厂商的逐行时序（L_SL/L_BL/L_EL、CKV 高电平宽度、11090 µs 帧目标）Lgfx 路径表达不了。
   面板是否接受 CS 形式的起始脉冲，**只能上真机回答**。
 
-### D-D 本板电源键在 CrossMux 里按不动
+### D-D 本板电源键在 CrossMax 里按不动
 
-`input.power == PIN_UNASSIGNED`，且 CrossMux 没有 PMU 按键事件 seam。后果：
+`input.power == PIN_UNASSIGNED`，且 CrossMax 没有 PMU 按键事件 seam。后果：
 「长按电源键睡眠」与 `shortPwrBtn == FORCE_REFRESH` 手动刷新**都不会触发**，电源键只能依赖 PMU 自身行为。
 自动睡眠超时仍可用。修法是在 SDK 增加 PMU 按键事件 seam 再在 app 侧接线（对应 blocker B10）。
 
@@ -193,14 +193,14 @@ SDK 板级、16 位并行显示路径、四个外设后端、CrossMux HAL 与 `r
 ## 7. 恢复工作时怎么做
 
 ```bash
-cd D:/CrossSIGO/crossmux-upstream
+cd D:/CrossSIGO/crossmax-upstream
 
 # 1) 编译（已完成；重跑走缓存，很快）
 pio run -e readpico
 # 2) 配置解析（不编译，可随时跑）
 pio project config --lint
 # 3) 烧写前：整片 16 MiB 备份并核验，留存于设备之外
-#    （CrossMux partitions.csv 与板厂 partitions_16M.csv 在 0xE000 冲突，
+#    （CrossMax partitions.csv 与板厂 partitions_16M.csv 在 0xE000 冲突，
 #     首次安装必须整表烧写：bootloader@0x0 / partitions@0x8000 / boot_app0@0xe000 / app@0x10000）
 # 4) 真机验收：按 docs/engineering/read-pico.md §4 的表逐项打勾
 ```
@@ -293,7 +293,7 @@ pio project config --lint
 
 - `cst836u` / `sc7a20h` / `fca9555` / `sy7636a` / `read_pico_pmu` 的 include **只用** `driver/gpio.h`、`driver/i2c_master.h`、`esp_err.h` —— **IDF 5.5.2 全部具备，可原样吃进来**。而我们为同一件事手写了约 900 行 C++。
 - 唯一被 IDF 版本卡住的是 `read_pico/read_pico_flash_hpm.c`（需 IDF v6 的 `esp_flash_chips/spi_flash_override.h`）；我们不跑 120 MHz，可直接排除。
-- **显示路径才是真正要定的那一个**：官方 `epdiy` + `e0470_epaper_waveform` 能**原生**跑 16×16 (from→to) 波形，**直接绕开 B3「忠实投影在数学上不存在」**，并拿到真正的 16 灰阶；但 **epdiy 是 LGPL-3.0-or-later，而 CrossMux 是 MIT**，静态链接需满足 LGPL 的可重链接等义务。现行 LovyanGFX 路线是 FreeBSD（宽松）但波形是近似的。
+- **显示路径才是真正要定的那一个**：官方 `epdiy` + `e0470_epaper_waveform` 能**原生**跑 16×16 (from→to) 波形，**直接绕开 B3「忠实投影在数学上不存在」**，并拿到真正的 16 灰阶；但 **epdiy 是 LGPL-3.0-or-later，而 CrossMax 是 MIT**，静态链接需满足 LGPL 的可重链接等义务。现行 LovyanGFX 路线是 FreeBSD（宽松）但波形是近似的。
   → **波形正确性 ↔ 许可干净，这个取舍只能你定。**
 
 ### 9.4 skill 流程项

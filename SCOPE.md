@@ -1,6 +1,6 @@
-# CrossMux Vision & Scope
+# CrossMax Vision & Scope
 
-CrossMux is a community fork of CrossPoint Reader for ESP32 e-ink devices.
+CrossMax is a community fork of CrossPoint Reader for ESP32 e-ink devices.
 Reading comes first: reliable book rendering, legible typography, and responsive
 navigation remain the core. Lightweight apps, reading analytics, standby faces,
 and on-demand services are also part of this fork.
@@ -19,7 +19,7 @@ and on-demand services are also part of this fork.
   and changes that improve memory use, Flash headroom, stability, or maintenance.
 
 These categories permit proposals for similar extensions; they do not freeze
-CrossMux at its current app list. An upstream feature freeze or a feature's
+CrossMax at its current app list. An upstream feature freeze or a feature's
 presence in another fork is not by itself a reason to reject it here.
 
 ## The acceptance test
@@ -43,7 +43,7 @@ the change, and state remaining acceptance work.
 
 ## Limits
 
-CrossMux is not a general-purpose tablet. Full web browsing, general writing or
+CrossMax is not a general-purpose tablet. Full web browsing, general writing or
 media suites, and PDF rendering remain outside the current project scope.
 Unbounded background networking, persistent workloads that prevent normal
 sleep, and features that compromise the reader's resource budget are also out.
@@ -56,7 +56,7 @@ input, translation, and lifecycle rules to apps as to the reader. See
 
 ## Proposing changes
 
-Use [CrossMux Issues](https://github.com/0x1abin/crossmux/issues) to discuss a
+Use [CrossMax Issues](https://github.com/0x1abin/crossmux/issues) to discuss a
 substantial addition before investing in it. Keep proposals concrete: intended
 behavior, device targets, resource tradeoffs, and verification. Small fixes and
 documentation improvements can go directly through the
