@@ -24,8 +24,11 @@ class SleepActivity final : public Activity {
   void renderLastScreenSleepScreen() const;
   void renderTransparentCustomSleepScreen() const;
   void renderBlankSleepScreen() const;
-  // Time and date of this sleep, painted over the frame already on the panel.
-  void stampSleepTime() const;
+  // Large clock, date and owner contact details, drawn instead of a cover.
+  void renderOwnerCardSleepScreen() const;
+  // Time, date and reading progress for this sleep, drawn into the frame
+  // before it is sent to the panel.
+  void drawSleepStamp() const;
 
   bool fromTimeout = false;
 };

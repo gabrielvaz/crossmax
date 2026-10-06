@@ -210,6 +210,7 @@ inline const std::vector<SettingInfo>& getBaseSettingsList() {
     sleepScreenValues[CrossPointSettings::BLANK] = StrId::STR_NONE_OPT;
     sleepScreenValues[CrossPointSettings::QUICK_RESUME] = StrId::STR_QUICK_RESUME;
     sleepScreenValues[CrossPointSettings::TRANSPARENT] = StrId::STR_TRANSPARENT;
+    sleepScreenValues[CrossPointSettings::OWNER_CARD] = StrId::STR_SLEEP_OWNER_CARD;
 
     std::vector<StrId> statusBarClockValues(CrossPointSettings::STATUS_BAR_CLOCK_MODE_COUNT);
     statusBarClockValues[CrossPointSettings::STATUS_BAR_CLOCK_HIDE] = StrId::STR_HIDE;
@@ -231,8 +232,13 @@ inline const std::vector<SettingInfo>& getBaseSettingsList() {
     v.push_back(SettingInfo::Enum(StrId::STR_SLEEP_COVER_FILTER, &CrossPointSettings::sleepScreenCoverFilter,
                                   {StrId::STR_NONE_OPT, StrId::STR_FILTER_CONTRAST, StrId::STR_INVERTED},
                                   "sleepScreenCoverFilter", StrId::STR_CAT_DISPLAY));
-    v.push_back(SettingInfo::Toggle(StrId::STR_SLEEP_TIMESTAMP, &CrossPointSettings::sleepScreenTimestamp,
-                                    "sleepScreenTimestamp", StrId::STR_CAT_DISPLAY));
+    v.push_back(SettingInfo::Enum(StrId::STR_SLEEP_STAMP, &CrossPointSettings::sleepScreenTimestamp,
+                                  {StrId::STR_STATE_OFF, StrId::STR_SLEEP_STAMP_READING, StrId::STR_SLEEP_STAMP_OWNER},
+                                  "sleepScreenStamp", StrId::STR_CAT_DISPLAY));
+    v.push_back(SettingInfo::String(StrId::STR_OWNER_NAME, &SETTINGS.ownerName[0], sizeof(SETTINGS.ownerName),
+                                    "ownerName", StrId::STR_CAT_DISPLAY));
+    v.push_back(SettingInfo::String(StrId::STR_OWNER_PHONE, &SETTINGS.ownerPhone[0], sizeof(SETTINGS.ownerPhone),
+                                    "ownerPhone", StrId::STR_CAT_DISPLAY));
     v.push_back(SettingInfo::Enum(StrId::STR_QUICK_RESUME_TIMEOUT, &CrossPointSettings::quickResumeSleepScreen,
                                   {StrId::STR_STATE_OFF, StrId::STR_STATE_ON}, "quickResumeSleepScreen",
                                   StrId::STR_CAT_DISPLAY));
