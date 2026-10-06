@@ -679,9 +679,19 @@ void SleepActivity::renderBitmapSleepScreen(const Bitmap& bitmap, const bool pre
     renderer.invertScreen();
   }
 
-  const bool absolute = hasGreyscale && renderer.grayscaleCapabilities(sleepGrayscaleMode(renderer)).supported();
+  // Upstream 92ef5707 (#3541) routed sleep images through the newer grayscale
+  // mode. On this panel the base frame reaches it and the planes never compose
+  // over it, so the sleep screen goes white and the cover never shows. 1.6.0,
+  // which renders covers correctly on the same hardware, always took the OEM
+  // path below, so sleep images stay pinned to it.
+  constexpr bool kAbsoluteGrayscaleSleepWorks = false;
+  const bool absolute = kAbsoluteGrayscaleSleepWorks && hasGreyscale &&
+                        renderer.grayscaleCapabilities(sleepGrayscaleMode(renderer)).supported();
   if (absolute) {
-    if (!renderer.displayGrayscaleBase(sleepGrayscaleMode(renderer))) return;
+    if (!renderer.displayGrayscaleBase(sleepGrayscaleMode(renderer))) {
+      LOG_ERR("SLP", "grayscale base refused the frame; nothing was sent to the panel");
+      return;
+    }
   } else if (hasGreyscale) {
     // OEM grayscale pipeline base. Must stay HALF: the gray nudge LUT is
     // calibrated against the pixel state the single-pass HALF waveform leaves
